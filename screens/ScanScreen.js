@@ -7,7 +7,9 @@ import { BarCodeScanner, Permissions } from 'expo';
 
 
 export default class ScanScreen extends React.Component {
-
+  static navigationOptions = {
+    title: 'scan',
+  };
 
   state = {
     hasCameraPermission: null,

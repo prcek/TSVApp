@@ -1,44 +1,75 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
-import HomeScreen from './screens/home';
-import ScanScreen from './screens/scan';
-import SettingsScreen from './screens/settings';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { AppLoading, Asset, Font } from 'expo';
+import { Ionicons } from '@expo/vector-icons';
+import RootNavigation from './navigation/RootNavigation';
 
-import {Ionicons,MaterialCommunityIcons} from '@expo/vector-icons';
+export default class App extends React.Component {
+  state = {
+    isLoadingComplete: false,
+  };
 
+  render() {
+    return (
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <RootNavigation />
+      </View>
+    );
+  }
+/*
+  render() {
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={this._handleLoadingError}
+          onFinish={this._handleFinishLoading}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <RootNavigation />
+        </View>
+      );
+    }
+  }
 
+  _loadResourcesAsync = async () => {
+    return Promise.all([
+      Asset.loadAsync([
+        require('./assets/images/robot-dev.png'),
+        require('./assets/images/robot-prod.png'),
+      ]),
+      Font.loadAsync({
+        // This is the font that we are using for our tab bar
+        ...Ionicons.font,
+        // We include SpaceMono because we use it in HomeScreen.js. Feel free
+        // to remove this if you are not using it in your app
+        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      }),
+    ]);
+  };
 
+  _handleLoadingError = error => {
+    // In this case, you might want to report the error to your error
+    // reporting service, for example Sentry
+    console.warn(error);
+  };
 
-export default createBottomTabNavigator({
-  Home: HomeScreen,
-  Scan: ScanScreen,
-  Settings: SettingsScreen,
-},
-
-{
-  
-  navigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state;
-      let iconName;
-      if (routeName === 'Home') {
-        iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-      } else if (routeName === 'Settings') {
-        iconName = `ios-options${focused ? '' : '-outline'}`;
-      } else if (routeName === 'Scan') {
-        iconName = `ios-qr-scanner${focused ? '' : '-outline'}`;
-      }
-
-      // You can return any component that you like here! We usually use an
-      // icon component from react-native-vector-icons
-      return <Ionicons name={iconName} size={25} color={tintColor} />;
-    },
-  }),
-  
-  tabBarOptions: {
-    activeTintColor: 'tomato',
-    inactiveTintColor: 'gray',
-  },
+  _handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  };
+  */
 }
 
-);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
+
+
