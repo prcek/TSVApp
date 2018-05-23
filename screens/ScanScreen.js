@@ -4,9 +4,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
+import { withNavigationFocus } from 'react-navigation';
 
-
-export default class ScanScreen extends React.Component {
+class ScanScreen extends React.Component {
   static navigationOptions = {
     title: 'scan',
   };
@@ -23,7 +23,8 @@ export default class ScanScreen extends React.Component {
 
   render() {
     const { hasCameraPermission } = this.state;
-    const isFocused = this.props.navigation.isFocused();
+   // console.log(this.props);
+    const isFocused = this.props.isFocused;
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     } else if (hasCameraPermission === false) {
@@ -51,3 +52,4 @@ export default class ScanScreen extends React.Component {
 }
 
 
+export default withNavigationFocus(ScanScreen);

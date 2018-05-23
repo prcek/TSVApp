@@ -97,6 +97,9 @@ InfoStack.navigationOptions = {
 
 
 export default createBottomTabNavigator({
+  //Home:HomeScreen, 
+  //Scan:ScanScreen,
+  //Auth:AuthScreen
   HomeStack,
   ScanStack,
   AuthStack,
