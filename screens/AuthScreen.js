@@ -11,7 +11,8 @@ export default class AuthScreen extends React.Component {
     state = {
       login: null,
       password: null,
-      wait:false
+      wait:false,
+      auth_res:""
     };
 
     _handleChangeLogin = (v) => {
@@ -22,11 +23,33 @@ export default class AuthScreen extends React.Component {
       this.setState({password:v});
     }
     _handleLogin = () =>{
-      alert("xx");
+      this.setState({wait:true,auth_res:"wait...."});
+      const url = "http://10.0.144.167:3000/spa_auth/login";
+      console.log("FETCH");
+      fetch(url,{
+        method:'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: this.state.login,
+          password: this.state.password,
+        }),
+      }).then((resp) => resp.json()).then(res=>{
+        console.log("FETCH res",res);
+        this.setState({wait:false,auth_res:res.auth_ok?"ok":"no"});
+      }).catch(err=>{
+        console.log("FETCH err",err);
+        alert("auth error"+err);
+        this.setState({wait:false,auth_res:"error"});
+      })
+
+     
     }
  
     render() {
-      const { login, password, wait } = this.state;
+      const { login, password, wait, auth_res } = this.state;
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>auth - {login}:{password}</Text>
@@ -38,6 +61,7 @@ export default class AuthScreen extends React.Component {
             title="login"
             //color="#841584"
           />
+          <Text>auth res - {auth_res}</Text>
         </View>
       );
     }
