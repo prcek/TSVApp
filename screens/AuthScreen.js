@@ -1,8 +1,10 @@
 
 import React from 'react';
 import { Text, View , TextInput, Button} from 'react-native';
+import { setAuth, clearAuth } from './../actions'
+import { connect } from 'react-redux'
 
-export default class AuthScreen extends React.Component {
+class AuthScreen extends React.Component {
 
     static navigationOptions = {
       title: 'login',
@@ -11,6 +13,7 @@ export default class AuthScreen extends React.Component {
     state = {
       login: null,
       password: null,
+      auth_url: "",
       wait:false,
       auth_res:""
     };
@@ -39,6 +42,11 @@ export default class AuthScreen extends React.Component {
       }).then((resp) => resp.json()).then(res=>{
         console.log("FETCH res",res);
         this.setState({wait:false,auth_res:res.auth_ok?"ok":"no"});
+        if (res.auth_ok) {
+          this.props.onSetAuth(res.auth_token,{name:res.name,role:res.role})
+        } else {
+          this.props.onClearAuth();
+        }
       }).catch(err=>{
         console.log("FETCH err",err);
         alert("auth error"+err);
@@ -50,6 +58,7 @@ export default class AuthScreen extends React.Component {
  
     render() {
       const { login, password, wait, auth_res } = this.state;
+      const { auth_token } = this.props;
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>auth - {login}:{password}</Text>
@@ -62,9 +71,32 @@ export default class AuthScreen extends React.Component {
             //color="#841584"
           />
           <Text>auth res - {auth_res}</Text>
+          <Text>auth token - {auth_token} </Text>
         </View>
       );
     }
 
 }
 
+function mapStateToProps(state) {
+  return { 
+      auth_token: state.auth.token,
+      auth_user: state.auth.user,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetAuth: (token,user) => {
+      dispatch(setAuth(token,user))
+    },
+    onClearAuth: () => {
+      dispatch(clearAuth())
+    },
+
+  }
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(AuthScreen)

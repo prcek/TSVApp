@@ -4,6 +4,13 @@ import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 
+import { store, persistor } from './store';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+
+
+
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
@@ -11,10 +18,14 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <RootNavigation />
-      </View>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <RootNavigation />
+          </View>
+        </PersistGate>
+       </Provider> 
     );
   }
 /*

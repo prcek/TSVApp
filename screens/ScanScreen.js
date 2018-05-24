@@ -40,6 +40,7 @@ class ScanScreen extends React.Component {
           <BarCodeScanner
             onBarCodeRead={this._handleBarCodeRead}
             style={StyleSheet.absoluteFill}
+            focusDepth={1}
           />
         </View>
       );
