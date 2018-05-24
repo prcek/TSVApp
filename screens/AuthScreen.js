@@ -53,8 +53,8 @@ export default class AuthScreen extends React.Component {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>auth - {login}:{password}</Text>
-          <TextInput style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={login} onChangeText={this._handleChangeLogin}/> 
-          <TextInput secureTextEntry style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={password} onChangeText={this._handleChangePassword}/>
+          <TextInput autoCapitalize={"none"} autoCorrect={false} style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={login} onChangeText={this._handleChangeLogin}/> 
+          <TextInput autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={password} onChangeText={this._handleChangePassword}/>
           <Button
             disabled={ wait || !login || !password}
             onPress={this._handleLogin}
