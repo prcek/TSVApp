@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.prcek.tsvapp"
+    },
+    "android": {
+      "package": "com.prcek.tsvapp"
     }
   }
 }

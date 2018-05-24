@@ -48,6 +48,7 @@ class ScanScreen extends React.Component {
 
   _handleBarCodeRead = ({ type, data }) => {
      console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+     alert("onScan");
   }
 }
 
