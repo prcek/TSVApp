@@ -53,12 +53,21 @@ class RootNavigation extends React.Component {
     this.client = client;
   }
 
+  _tick = ()=>{
+    console.log("tick")
+  }
+
   componentDidMount() {
    // this._notificationSubscription = this._registerForPushNotifications();
+    console.log("RootNavigation DidMount");
+    this.timer = setInterval(this._tick,5000);
   }
 
   componentWillUnmount() {
    // this._notificationSubscription && this._notificationSubscription.remove();
+   console.log("RootNavigation WillUnmount");
+    clearInterval(this.timer);
+    this.timer = null;
   }
 
   render() {
