@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Text, View , TextInput, Button} from 'react-native';
-import { setAuth, clearAuth } from './../actions'
 import { connect } from 'react-redux'
+import { doLogin} from './../auth';
 
 class AuthScreen extends React.Component {
 
@@ -13,7 +13,6 @@ class AuthScreen extends React.Component {
     state = {
       login: null,
       password: null,
-      auth_url: "",
       wait:false,
       auth_res:""
     };
@@ -27,33 +26,15 @@ class AuthScreen extends React.Component {
     }
     _handleLogin = () =>{
       this.setState({wait:true,auth_res:"wait...."});
-      const url = "http://10.0.144.167:3000/spa_auth/login";
-      console.log("FETCH");
-      fetch(url,{
-        method:'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          login: this.state.login,
-          password: this.state.password,
-        }),
-      }).then((resp) => resp.json()).then(res=>{
-        console.log("FETCH res",res);
-        this.setState({wait:false,auth_res:res.auth_ok?"ok":"no"});
-        if (res.auth_ok) {
-          this.props.onSetAuth(res.auth_token,{name:res.name,role:res.role})
+      doLogin(this.state.login,this.state.password).then(res=>{
+        if (res.ok) {
+          this.setState({wait:false,auth_res:"ok"});
         } else {
-          this.props.onClearAuth();
+          this.setState({wait:false,auth_res:"failed"});
+          alert(res.err);
         }
-      }).catch(err=>{
-        console.log("FETCH err",err);
-        alert("auth error"+err);
-        this.setState({wait:false,auth_res:"error"});
-      })
-
-     
+      });
+      
     }
  
     render() {
@@ -85,18 +66,5 @@ function mapStateToProps(state) {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onSetAuth: (token,user) => {
-      dispatch(setAuth(token,user))
-    },
-    onClearAuth: () => {
-      dispatch(clearAuth())
-    },
 
-  }
-}
-
-
-
-export default connect(mapStateToProps,mapDispatchToProps)(AuthScreen)
+export default connect(mapStateToProps,{})(AuthScreen)
