@@ -60,6 +60,7 @@ function doRelogin() {
             return;
         }
         if (token==="") {
+            store.dispatch(clearAuth());
             resolve({ok:false,err:"no token"})
             return;
         }
@@ -67,10 +68,12 @@ function doRelogin() {
 
         const d = jwtDecode(token);
         if (!d) {
+            store.dispatch(clearAuth());
             resolve({ok:false,err:"invalid token"})
             return;
         }
         if (!d.exp) {
+            store.dispatch(clearAuth());
             resolve({ok:false,err:"invalid token"})
             return;
         }
