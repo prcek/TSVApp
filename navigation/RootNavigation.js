@@ -56,7 +56,9 @@ class RootNavigation extends React.Component {
   _tick = ()=>{
     //console.log("tick")
     doRelogin().then(res=>{
-      console.log("_tick.doRelogin res:",res);
+      if (!res.ok) { 
+        console.log("_tick.doRelogin failed:",res);
+      }
     })
   }
 

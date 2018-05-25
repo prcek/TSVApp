@@ -46,7 +46,7 @@ function doLogin(user,password) {
 }
 
 function doRelogin() {
-    console.log("DO_RELOGIN");
+    //console.log("DO_RELOGIN");
     return new Promise(function(resolve, reject) {
 
         const auth = store.getState().auth;
@@ -81,7 +81,7 @@ function doRelogin() {
         var now = new Date();
         var exp = (d.exp*1000)-now.getTime();
         if (exp>5000) {
-            console.log("login auth exp: ", exp/60000, "min left")
+            //console.log("login auth exp: ", exp/60000, "min left")
             if (exp<(60000*45)) {  //1 hour before exp
                 console.log("doRelogin");
                 const url = Constants.manifest.extra.auth_url_base+"/relogin";
