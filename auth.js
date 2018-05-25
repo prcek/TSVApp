@@ -17,6 +17,7 @@ function doLogin(user,password) {
     console.log("DO_LOGIN");
     return new Promise(function(resolve, reject) {
         const url = Constants.manifest.extra.auth_url_base+"/login";
+        console.log("login url:",url);
         fetch(url,{
             method:'POST',
             headers: {

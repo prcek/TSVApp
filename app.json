@@ -6,7 +6,7 @@
     "privacy": "public",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -15,7 +15,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "enabled": true
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,9 +29,13 @@
       "package": "com.prcek.tsvapp"
     },
     "extra": {
-      "auth_url_base": "http://10.0.144.167:3000/spa_auth",
-      "status_url_base": "http://10.0.144.167:3000/spa_status",
-      "gql_url": "http://10.0.144.167:3000/graphql"
+      
+      "auth_url_base": "https://evidence.tsstarlet.com/spa_auth",
+      "status_url_base": "https://evidence.tsstarlet.com/spa_status",
+      "gql_url": "https://evidence.tsstarlet.com/graphql",
+      "test_auth_url_base": "http://10.0.144.167:3000/spa_auth",
+      "test_status_url_base": "http://10.0.144.167:3000/spa_status",
+      "test_gql_url": "http://10.0.144.167:3000/graphql"
     }
   }
 }

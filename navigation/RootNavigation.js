@@ -32,7 +32,7 @@ class RootNavigation extends React.Component {
     const httpLink = createHttpLink({
       uri: Constants.manifest.extra.gql_url, 
     });
-    
+    console.log("using gqlurl",Constants.manifest.extra.gql_url);
     const authLink = setContext((_, { headers }) => {
       // get the authentication token from local storage if it exists
       console.log("authLink set context");
