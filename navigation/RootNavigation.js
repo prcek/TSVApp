@@ -30,7 +30,7 @@ class RootNavigation extends React.Component {
   constructor(props) {
     super(props);
     const httpLink = createHttpLink({
-      uri: 'http://10.0.144.167:3000/graphql', 
+      uri: Constants.manifest.extra.gql_url, 
     });
     
     const authLink = setContext((_, { headers }) => {

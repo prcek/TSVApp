@@ -26,6 +26,11 @@
     },
     "android": {
       "package": "com.prcek.tsvapp"
+    },
+    "extra": {
+      "auth_url_base": "http://10.0.144.167:3000/spa_auth",
+      "status_url_base": "http://10.0.144.167:3000/spa_status",
+      "gql_url": "http://10.0.144.167:3000/graphql"
     }
   }
 }

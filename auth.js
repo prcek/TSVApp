@@ -16,7 +16,7 @@ function processAuthResp(data) {
 function doLogin(user,password) {
     console.log("DO_LOGIN");
     return new Promise(function(resolve, reject) {
-        const url = "http://10.0.144.167:3000/spa_auth/login";
+        const url = Constants.manifest.extra.auth_url_base+"/login";
         fetch(url,{
             method:'POST',
             headers: {
@@ -81,7 +81,7 @@ function doRelogin() {
             console.log("login auth exp: ", exp/60000, "min left")
             if (exp<(60000*45)) {  //1 hour before exp
                 console.log("doRelogin");
-                const url = "http://10.0.144.167:3000/spa_auth/relogin";
+                const url = Constants.manifest.extra.auth_url_base+"/relogin";
                 fetch(url,{
                     method:'POST',
                     body:JSON.stringify({token:token}), 
