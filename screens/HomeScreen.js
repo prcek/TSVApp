@@ -2,27 +2,20 @@
 
 
 import React from 'react';
+import { Constants } from 'expo';
 import { AsyncStorage, Text, View , Button} from 'react-native';
 import { connect } from 'react-redux'
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { setContext } from 'apollo-link-context';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
 var jwtDecode = require('jwt-decode');
 
-/*
-const authMiddleware = setContext(async (req, { headers }) => {
-  const token = await AsyncStorage.getItem(TOKEN_NAME);
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : ''
-    },
-  };
-});
-*/
+const GQL_PING=gql`
+query Ping {
+  device_Ping(device_id:"x") {
+    ok
+  }
+}
+`;
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -33,43 +26,11 @@ class HomeScreen extends React.Component {
     super(props);
     console.log("HomeScreen constructor props",props)
 
-
-    const httpLink = createHttpLink({
-      uri: 'http://10.0.144.167:3000/graphql',
-    });
-    
-    const authLink = setContext((_, { headers }) => {
-      // get the authentication token from local storage if it exists
-      console.log("authLink set context");
-      const token = this.props.auth_token;
-      // return the headers to the context so httpLink can read them
-      return {
-        headers: {
-          ...headers,
-          authorization: token ? `Bearer ${token}` : "",
-        }
-      }
-    });
-    
-    const client = new ApolloClient({
-      link: authLink.concat(httpLink),
-      cache: new InMemoryCache()
-    });
-    this.client = client;
   }
+
   _handleTest = () =>{
     console.log("handle test");
-    this.client.query({
-      query: gql`
-        query TodoApp {
-          todos {
-            id
-            text
-            completed
-          }
-        }
-      `,
-    })
+    this.props.client.query({query:GQL_PING})
       .then(data => console.log(data))
       .catch(error => console.log(error));
   }
@@ -93,6 +54,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Home!?!?</Text>
+        <Text>{Constants.deviceId}</Text>
         <Button onPress={this._handleTest} title="test"/>
       </View>
     );
@@ -107,4 +69,8 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps,{})(HomeScreen)
+
+export default compose(
+  withApollo,
+  connect(mapStateToProps,{}),
+)(HomeScreen);

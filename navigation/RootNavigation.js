@@ -2,6 +2,20 @@ import React from 'react';
 import { Notifications } from 'expo';
 import { createSwitchNavigator } from 'react-navigation';
 
+import { Constants } from 'expo';
+import { AsyncStorage, Text, View , Button} from 'react-native';
+import { connect } from 'react-redux'
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import { createHttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import gql from 'graphql-tag';
+import { setAuth, clearAuth } from './../actions'
+
+var jwtDecode = require('jwt-decode');
+
+
 import MainTabNavigator from './MainTabNavigator';
 //import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
@@ -11,7 +25,34 @@ const AppNavigator = createSwitchNavigator({
   Main: MainTabNavigator,
 });
 
-export default class RootNavigation extends React.Component {
+class RootNavigation extends React.Component {
+
+  constructor(props) {
+    super(props);
+    const httpLink = createHttpLink({
+      uri: 'http://10.0.144.167:3000/graphql', 
+    });
+    
+    const authLink = setContext((_, { headers }) => {
+      // get the authentication token from local storage if it exists
+      console.log("authLink set context");
+      const token = this.props.auth_token;
+      // return the headers to the context so httpLink can read them
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : "",
+        }
+      }
+    });
+    
+    const client = new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache()
+    });
+    this.client = client;
+  }
+
   componentDidMount() {
    // this._notificationSubscription = this._registerForPushNotifications();
   }
@@ -21,7 +62,11 @@ export default class RootNavigation extends React.Component {
   }
 
   render() {
-    return <AppNavigator />;
+    return (
+      <ApolloProvider client={this.client}>
+        <AppNavigator />
+      </ApolloProvider>
+    );
   }
 /*
   _registerForPushNotifications() {
@@ -41,3 +86,25 @@ export default class RootNavigation extends React.Component {
 */
 }
 
+
+function mapStateToProps(state) {
+  return { 
+      auth_token: state.auth.token,
+      auth_user: state.auth.user,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetAuth: (token,user) => {
+      dispatch(setAuth(token,user))
+    },
+    onClearAuth: () => {
+      dispatch(clearAuth())
+    },
+
+  }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(RootNavigation)
