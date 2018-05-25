@@ -46,10 +46,14 @@ class ScanScreen extends React.Component {
     title: 'scan',
   };
 
-  state = {
-    hasCameraPermission: null,
-    wait:false,
-    msg:"?"
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasCameraPermission: null,
+      wait:false,
+      msg:"?"
+    }
+    this.clearTimer = null;
   }
 
   async componentWillMount() {
@@ -58,6 +62,25 @@ class ScanScreen extends React.Component {
     this.setState({hasCameraPermission: status === 'granted'});
   }
 
+  componentWillUnmount() {
+    // this._notificationSubscription && this._notificationSubscription.remove();
+    console.log("ScanScreen WillUnmount");
+     if (this.clearTimer) { clearTimeout(this.clearTimer); this.timer = null;}
+   }
+
+  _startClearTimeout = ()=> {
+    if (this.clearTimer) { 
+      clearTimeout(this.clearTimer); 
+    }
+    this.clearTimer = setTimeout(this._handleClear,3000);
+  } 
+  _handleClear = ()=>{
+    if (!this.state.wait) {
+      this.setState({msg:""});
+    } else {
+      this.setState({msg:"timeout"});
+    }
+  }
   render() {
     const { hasCameraPermission,msg } = this.state;
    // console.log(this.props);
@@ -105,15 +128,18 @@ class ScanScreen extends React.Component {
 
      this.props.client.query({
        query:GQL_CHEKCQR,
-       variables:{qr:data}
+       variables:{qr:data},
+       fetchPolicy:"no-cache"
       })
      .then(res => {
        console.log("checkQR res:",res)
        this.setState({wait:false,msg:"ok"});
+       this._startClearTimeout();
      })
      .catch(error => {
       console.log("checkQR error:",error)
       this.setState({wait:false,msg:"error"});
+      this._startClearTimeout();
     });
   }
 }
