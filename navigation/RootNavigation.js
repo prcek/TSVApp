@@ -12,7 +12,7 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import { setAuth, clearAuth } from './../actions'
-
+import { doRelogin } from './../auth';
 var jwtDecode = require('jwt-decode');
 
 
@@ -54,7 +54,10 @@ class RootNavigation extends React.Component {
   }
 
   _tick = ()=>{
-    console.log("tick")
+    //console.log("tick")
+    doRelogin().then(res=>{
+      console.log("_tick.doRelogin res:",res);
+    })
   }
 
   componentDidMount() {

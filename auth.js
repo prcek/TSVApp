@@ -14,6 +14,7 @@ function processAuthResp(data) {
 
 
 function doLogin(user,password) {
+    console.log("DO_LOGIN");
     return new Promise(function(resolve, reject) {
         const url = "http://10.0.144.167:3000/spa_auth/login";
         fetch(url,{
@@ -45,6 +46,72 @@ function doLogin(user,password) {
 }
 
 function doRelogin() {
+    console.log("DO_RELOGIN");
+    return new Promise(function(resolve, reject) {
+
+        const auth = store.getState().auth;
+        if (!auth) { 
+            resolve({ok:false,err:"no token"})
+            return;
+        }
+        const token = auth.token;
+        if (!token) {
+            resolve({ok:false,err:"no token"})
+            return;
+        }
+        if (token==="") {
+            resolve({ok:false,err:"no token"})
+            return;
+        }
+
+
+        const d = jwtDecode(token);
+        if (!d) {
+            resolve({ok:false,err:"invalid token"})
+            return;
+        }
+        if (!d.exp) {
+            resolve({ok:false,err:"invalid token"})
+            return;
+        }
+    
+        var now = new Date();
+        var exp = (d.exp*1000)-now.getTime();
+        if (exp>5000) {
+            console.log("login auth exp: ", exp/60000, "min left")
+            if (exp<(60000*45)) {  //1 hour before exp
+                console.log("doRelogin");
+                const url = "http://10.0.144.167:3000/spa_auth/relogin";
+                fetch(url,{
+                    method:'POST',
+                    body:JSON.stringify({token:token}), 
+                    headers: new Headers({
+                        'Content-Type': 'application/json'
+                    })
+                }).then((resp) => resp.json()).then(data=>{
+                    if (data.auth_ok) {
+                        console.log("relogin ok");
+                        processAuthResp(data);
+                        resolve({ok:true})
+                    } else {
+                        console.log("relogin no auth")
+                        store.dispatch(clearAuth());
+                        resolve({ok:false,err:"relogin failed"})
+                    }
+                }).catch(err=>{
+                    console.log("relogin failed");
+                    resolve({ok:false,err:"network problem"})
+                })
+            } else {
+                console.log("relogin not needed");
+                resolve({ok:true});
+            }
+        } else {
+            store.dispatch(clearAuth());
+            resolve({ok:false,err:"token expired"})
+        }
+
+    });
 
 }
 
@@ -56,9 +123,14 @@ function checkAuth() {
 
 }
 
+function ping() {
+
+}
+ 
 module.exports = {
     doLogin:doLogin,
     doRelogin:doRelogin,
     doLogout:doLogout,
     checkAuth:checkAuth,
+    ping:ping,
 }
