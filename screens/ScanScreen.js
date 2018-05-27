@@ -2,8 +2,8 @@
 
 
 import React from 'react';
-import { StyleSheet, Text, View , Button} from 'react-native';
-import { BarCodeScanner, Permissions } from 'expo';
+import { StyleSheet, Text, View , Button, TouchableOpacity, Image} from 'react-native';
+import { BarCodeScanner, Permissions ,Camera,FileSystem, takeSnapshotAsync} from 'expo';
 import { withNavigationFocus } from 'react-navigation';
 
 import { compose, graphql, withApollo} from "react-apollo";
@@ -34,9 +34,9 @@ const s = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    height:70,
-    backgroundColor: 'red',
-    opacity: 0.4
+    height:170,
+    backgroundColor: 'transparent',
+    //opacity: 0.4
   }
 });
 
@@ -51,9 +51,12 @@ class ScanScreen extends React.Component {
     this.state = {
       hasCameraPermission: null,
       wait:false,
-      msg:"?"
+      msg:"?",
+      type:Camera.Constants.Type.back,
+      shot:null,
     }
     this.clearTimer = null;
+    this.camera = null;
   }
 
   async componentWillMount() {
@@ -72,14 +75,17 @@ class ScanScreen extends React.Component {
     if (this.clearTimer) { 
       clearTimeout(this.clearTimer); 
     }
-    this.clearTimer = setTimeout(this._handleClear,3000);
+    this.clearTimer = setTimeout(this._handleClear,5000);
   } 
   _handleClear = ()=>{
-    if (!this.state.wait) {
-      this.setState({msg:""});
-    } else {
-      this.setState({msg:"timeout"});
-    }
+    console.log("_handleClear");
+      if (this.state.shot) {
+        console.log("deleting old shot")
+       // FileSystem.deleteAsync(this.state.shot.uri,{idempotent:true}).then(res=>{
+        //  console.log("delete done");
+       // })
+      }
+      this.setState({wait:false, msg:"",shot:null});
   }
   render() {
     const { hasCameraPermission,msg } = this.state;
@@ -95,16 +101,68 @@ class ScanScreen extends React.Component {
     } else {
       console.log("scan active");
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <BarCodeScanner
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} ref={ref => { this.view = ref; }}>
+          <Camera ref={ref => { this.camera = ref; }}
             onBarCodeRead={this._handleBarCodeRead}
             style={StyleSheet.absoluteFill}
             focusDepth={1}
-          />
+            type={this.state.type}
+          >
+           
+           <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity
+                style={{
+                  flex: 0.1,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  this.setState({
+                    type: this.state.type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back,
+                  });
+                }}>
+                <Text
+                  style={{ fontSize: 18, marginBottom: 20, color: 'white' }}>
+                  {' '}Flip{' '}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flex: 0.1,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  this.setState({
+                    type: this.state.type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back,
+                  });
+                }}>
+                <Text
+                  style={{ fontSize: 18, marginBottom: 20, color: 'white' }}>
+                  {' '}Flip{' '}
+                </Text>
+              </TouchableOpacity>
+
+            </View>
+
+
+          </Camera>
           <View style={s.overlay}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text> {msg} </Text>
+              <Text style={{ backgroundColor:"red"}}> {msg} </Text>
               <Button onPress={this._fakeQR} title="QR1"/>
+              { this.state.shot && (
+                  <Image source={{ uri:this.state.shot.uri}}   style={{ width: 100, height: 100, resizeMode: 'contain' }} />
+              )}
             </View>
           </View>
         </View>
@@ -122,8 +180,15 @@ class ScanScreen extends React.Component {
        console.log("ignore")
        return;
      } else {
-
+      
        this.setState({wait:true,msg:"..."});
+       if (this.camera) {
+        //takeSnapshotAsync(this.view,{format:'png',quality:1,result:'data-uri',height:100,width:100}).then((shot)=>{
+         this.camera.takePictureAsync({quality:0,exif:false,width:100}).then((shot)=>{
+           console.log("takeSnapshotAsync",shot);
+           this.setState({shot:shot});
+         })
+       }
      }
 
      this.props.client.query({
@@ -133,12 +198,12 @@ class ScanScreen extends React.Component {
       })
      .then(res => {
        console.log("checkQR res:",res)
-       this.setState({wait:false,msg:"ok"});
+       this.setState({msg:"ok"});
        this._startClearTimeout();
      })
      .catch(error => {
       console.log("checkQR error:",error)
-      this.setState({wait:false,msg:"error"});
+      this.setState({msg:"error"});
       this._startClearTimeout();
     });
   }
