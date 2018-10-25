@@ -3,9 +3,10 @@
 
 import React from 'react';
 import { Constants } from 'expo';
-import { AsyncStorage, Text, View , Button} from 'react-native';
+import { AsyncStorage, Text, View , Button,FlatList} from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
+import EventList from '../components/EventList';
 import gql from 'graphql-tag';
 var jwtDecode = require('jwt-decode');
 
@@ -25,7 +26,6 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     //console.log("HomeScreen constructor props",props)
-
   }
 
   _handleTest = () =>{
@@ -49,13 +49,12 @@ class HomeScreen extends React.Component {
    
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!?!?</Text>
-        <Text>{Constants.deviceId}</Text>
         {auth_ok?(
           <Text>logged in</Text>
         ):(
           <Text>Please login first!</Text>
         )}
+        <EventList />
         <Button onPress={this._handleTest} title="test"/>
       </View>
     );
