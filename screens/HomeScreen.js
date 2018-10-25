@@ -7,6 +7,7 @@ import { AsyncStorage, Text, View , Button,FlatList} from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import EventList from '../components/EventList';
+import TicketInput from '../components/TicketInput';
 import gql from 'graphql-tag';
 var jwtDecode = require('jwt-decode');
 
@@ -54,6 +55,7 @@ class HomeScreen extends React.Component {
         ):(
           <Text>Please login first!</Text>
         )}
+        <TicketInput />
         <EventList />
         <Button onPress={this._handleTest} title="test"/>
       </View>
