@@ -1,8 +1,9 @@
 import React from 'react';
-import { Alert,Text, Button, FlatList } from 'react-native';
+import { Alert,Text, Button, FlatList, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
+import Moment from 'moment';
 
 const GQL_GET_EVENTS=gql`
 query GetEvents {
@@ -10,10 +11,34 @@ query GetEvents {
     id
     name
     status
+    date
   }
 }
 `;
 
+class EventListItem extends React.PureComponent {
+  _onPress = () => {
+    this.props.onPressItem(this.props.id);
+  };
+
+  render() {
+    const textColor = this.props.selected ? "red" : "black";
+    const mm = Moment(this.props.date).toDate();
+
+    return (
+      <TouchableOpacity onPress={this._onPress}>
+        <View style={{minHeight: 40, flex: 1, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: 'powderblue'}}>
+          <Text style={{ color: textColor }}>
+            {this.props.title}
+          </Text>
+          <Text style={{ color: textColor }}>
+            {mm.toLocaleDateString()+" "+mm.toLocaleTimeString()}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 class EventList extends React.Component {
 
@@ -21,6 +46,7 @@ class EventList extends React.Component {
     super(props);
     this.state = {
       refreshing:false,
+      selected:null,
       events: [
       ]
     }
@@ -57,6 +83,20 @@ class EventList extends React.Component {
 
   _keyExtractor = (item, index) => item.id;
 
+  _onPressItem = (id) => {
+    //Alert.alert('vybrano:'+id);
+    this.setState({selected:id});
+  };
+
+  _renderItem = ({item}) => (
+    <EventListItem
+      id={item.id}
+      onPressItem={this._onPressItem}
+      selected={this.state.selected==item.id}
+      title={item.name}
+      date={item.date}
+    />
+  );
 
   render() {
     return (
@@ -65,7 +105,7 @@ class EventList extends React.Component {
         <Button onPress={()=>this.fetchEvents()} title="prenacist seznam akci"/>
         <FlatList 
           data={this.state.events}
-          renderItem={({item}) => <Text >{item.name}</Text>}
+          renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           refreshing={this.state.refreshing}
           onRefresh={()=>this.fetchEvents()}
