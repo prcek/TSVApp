@@ -34,27 +34,28 @@ class HomeScreen extends React.Component {
       .then(data => console.log(data))
       .catch(error => console.log(error));
   }
-
+  /*
   componentWillMount() {
     console.log('componentWillMount');
     AsyncStorage.getAllKeys((err,keys)=>{
       console.log("AsyncStorage:",JSON.stringify(keys));
     });
-    
   }
+  */
 
   render() {
-    const {auth_token} = this.props;
-    console.log("auth_token",auth_token);
-    if (auth_token) {
-      const dt = jwtDecode(auth_token);
-      console.log("DT:",dt)
-    }
-
+    const {auth_ok} = this.props;
+    console.log("auth_ok",auth_ok);
+   
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Home!?!?</Text>
         <Text>{Constants.deviceId}</Text>
+        {auth_ok?(
+          <Text>logged in</Text>
+        ):(
+          <Text>Please login first!</Text>
+        )}
         <Button onPress={this._handleTest} title="test"/>
       </View>
     );
@@ -66,6 +67,7 @@ function mapStateToProps(state) {
   return { 
       auth_token: state.auth.token,
       auth_user: state.auth.user,
+      auth_ok: state.auth.ok,
   }
 }
 

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Constants } from 'expo';
 import { Text, View , TextInput, Button} from 'react-native';
 import { connect } from 'react-redux'
 import { doLogin} from './../auth';
@@ -39,10 +40,11 @@ class AuthScreen extends React.Component {
  
     render() {
       const { login, password, wait, auth_res } = this.state;
-      const { auth_token } = this.props;
+      const { auth_token, auth_ok } = this.props;
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>auth - {login}:{password}</Text>
+          <Text>ID zařízení: {Constants.deviceId}</Text>
+          <Text>Aktuálně {auth_ok?"JSTE": "NEJSTE"} přihlášen</Text>
           <TextInput autoCapitalize={"none"} autoCorrect={false} style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={login} onChangeText={this._handleChangeLogin}/> 
           <TextInput autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}} value={password} onChangeText={this._handleChangePassword}/>
           <Button
@@ -53,6 +55,7 @@ class AuthScreen extends React.Component {
           />
           <Text>auth res - {auth_res}</Text>
           <Text>auth token - {auth_token} </Text>
+
         </View>
       );
     }
@@ -63,6 +66,7 @@ function mapStateToProps(state) {
   return { 
       auth_token: state.auth.token,
       auth_user: state.auth.user,
+      auth_ok:state.auth.ok,
   }
 }
 
