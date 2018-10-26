@@ -45,7 +45,7 @@ class HomeScreen extends React.Component {
   */
 
   render() {
-    const {auth_ok} = this.props;
+    const {auth_ok,event} = this.props;
     console.log("auth_ok",auth_ok);
    
     return (
@@ -69,6 +69,7 @@ function mapStateToProps(state) {
       auth_token: state.auth.token,
       auth_user: state.auth.user,
       auth_ok: state.auth.ok,
+      event: state.event
   }
 }
 

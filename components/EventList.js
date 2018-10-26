@@ -2,6 +2,8 @@ import React from 'react';
 import { Alert,Text, Button, FlatList, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
+import { setEvent, clearEvent } from '../actions'
+
 import gql from 'graphql-tag';
 import Moment from 'moment';
 
@@ -18,7 +20,7 @@ query GetEvents {
 
 class EventListItem extends React.PureComponent {
   _onPress = () => {
-    this.props.onPressItem(this.props.id);
+    this.props.onPressItem(this.props.item);
   };
 
   render() {
@@ -83,16 +85,16 @@ class EventList extends React.Component {
 
   _keyExtractor = (item, index) => item.id;
 
-  _onPressItem = (id) => {
-    //Alert.alert('vybrano:'+id);
-    this.setState({selected:id});
+  _onPressItem = (item) => {
+    this.props.onEventSelected(item);
   };
 
   _renderItem = ({item}) => (
     <EventListItem
       id={item.id}
+      item={item}
       onPressItem={this._onPressItem}
-      selected={this.state.selected==item.id}
+      selected={this.props.selected_event_id==item.id}
       title={item.name}
       date={item.date}
     />
@@ -101,14 +103,15 @@ class EventList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Text>Seznam akci {this.state.refreshing?"prenacitase":""}</Text>
-        <Button onPress={()=>this.fetchEvents()} title="prenacist seznam akci"/>
+        <Text>Seznam akcí</Text>
+        <Button onPress={()=>this.fetchEvents()} title="přenačíst"/>
         <FlatList 
           data={this.state.events}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           refreshing={this.state.refreshing}
           onRefresh={()=>this.fetchEvents()}
+          ListEmptyComponent={(<Text> Akce nejsou načteny </Text>)}
         />
       </React.Fragment>
       
@@ -122,11 +125,21 @@ function mapStateToProps(state) {
       auth_token: state.auth.token,
       auth_user: state.auth.user,
       auth_ok: state.auth.ok,
+      selected_event_id: state.event.event_id,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onEventSelected: (item) => {
+      dispatch(setEvent(item.id,item.name,item.date))
+    },
   }
 }
 
 
+
 export default compose(
   withApollo,
-  connect(mapStateToProps,{}),
+  connect(mapStateToProps,mapDispatchToProps),
 )(EventList);

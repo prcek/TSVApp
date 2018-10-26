@@ -1,5 +1,24 @@
 import React from 'react';
 import { Text,View,TextInput } from 'react-native';
+import { connect } from 'react-redux'
+import { compose, graphql, withApollo} from "react-apollo";
+import gql from 'graphql-tag';
+
+
+const GQL_TICKET_LOOKUP=gql`
+query eventTicketLookup($event_id:ID!, $lookup_key:String!) {
+  eventTicketLookup(event_id:$event_id lookup_key:$lookup_key) {
+    limited
+    match {
+      ticket_key
+    }
+    candidates
+  }
+}
+`;
+
+
+
 
 const FAKE_TICKETS = [
   'T5MR-MHWQ-9G15',
@@ -12,19 +31,45 @@ const FAKE_TICKETS = [
   'T5MB-MHWQ-9G15',
 ];
 
-export default class TicketInput extends React.Component {
+class TicketInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value:"T"
+      value:"T",
+      candidates:[],
+      lookup:false
     }
   }
   
   lookup_candidates(v) {
-    const cands = FAKE_TICKETS.filter(t=>{
-      return t.startsWith(v);
+
+    if (this.state.lookup) {
+      return;
+    }
+    if (!this.props.event_id) {
+      return;
+    }
+    this.setState({lookup:true},()=>{
+      this.props.client.query({
+        query:GQL_TICKET_LOOKUP,
+        variables:{
+          event_id:this.props.event_id,
+          lookup_key:v,
+        },
+        fetchPolicy:"network-only"
+      }).then(res => {
+        //console.log("ticket lookup res",res);
+        let candidates = [];
+        if (res.data && res.data.eventTicketLookup) {
+           candidates = res.data.eventTicketLookup.candidates;
+        }
+        this.setState({lookup:false,candidates})
+      }).catch(err=>{
+        console.error("ticket lookup error",err);
+        this.setState({lookup:false})
+      })
+
     })
-    return cands;
   }
 
   _process_text = (v) => {
@@ -33,14 +78,16 @@ export default class TicketInput extends React.Component {
       new_v+='-'
     }
     this.setState({value:new_v});
+    this.lookup_candidates(new_v);
   };
 
   render() {
-    const {value} = this.state;
-    const candidates = this.lookup_candidates(value);
+    const {value,candidates} = this.state;
+    const {event_id} = this.props;
     return (
       <View>
         <Text>ticket input - {value!=null?'"'+value+'"':"null"}</Text>
+        <Text>event_id: {event_id}</Text>
         <Text>candidates: {candidates.length==1?candidates[0]:candidates.length}</Text>
         <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}}
         autoCapitalize={"characters"}
@@ -51,3 +98,17 @@ export default class TicketInput extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return { 
+      auth_token: state.auth.token,
+      auth_user: state.auth.user,
+      auth_ok: state.auth.ok,
+      event_id: state.event.event_id,
+  }
+}
+
+export default compose(
+  withApollo,
+  connect(mapStateToProps,{}),
+)(TicketInput);
