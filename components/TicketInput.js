@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text,View,TextInput } from 'react-native';
+import { Text,View,TextInput,TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
@@ -80,16 +80,22 @@ class TicketInput extends React.Component {
     this.setState({value:new_v});
     this.lookup_candidates(new_v);
   };
-
+  _onPressCandidate = ()=>{
+    if (this.state.candidates.length==1) {
+      this.setState({value:this.state.candidates[0]})
+    }
+  }
   render() {
     const {value,candidates} = this.state;
     const {event_id} = this.props;
     return (
       <View>
-        <Text>ticket input - {value!=null?'"'+value+'"':"null"}</Text>
-        <Text>event_id: {event_id}</Text>
-        <Text>candidates: {candidates.length==1?candidates[0]:candidates.length}</Text>
-        <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        {candidates.length==1 &&(
+           <TouchableOpacity onPress={this._onPressCandidate}>
+            <Text>{candidates[0]} ? </Text>
+           </TouchableOpacity>
+        )}
+        <TextInput style={{height: 40, width:250, borderColor: 'gray', borderWidth: 1}}
         autoCapitalize={"characters"}
         autoCorrect={false}
         onChangeText={this._process_text}
