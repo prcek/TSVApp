@@ -4,11 +4,11 @@
 import React from 'react';
 import { StyleSheet, Text, View , Button, TouchableOpacity, Image} from 'react-native';
 import { BarCodeScanner, Permissions ,Camera,FileSystem, takeSnapshotAsync} from 'expo';
-import { withNavigationFocus } from 'react-navigation';
+import { withNavigationFocus, withNavigation, NavigationEvents } from 'react-navigation';
 
 import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
-
+import NavContext from '../navigation/NavContext';
 import { connect } from 'react-redux'
 
 
@@ -46,6 +46,8 @@ class ScanScreen extends React.Component {
     title: 'scan',
   };
 
+  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -55,49 +57,61 @@ class ScanScreen extends React.Component {
       type:Camera.Constants.Type.back,
       shot:null,
     }
-    this.clearTimer = null;
+
     this.camera = null;
+    this.tickTimer = null;
   }
 
-  async componentWillMount() {
-    console.log('componentWillMount');
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({hasCameraPermission: status === 'granted'});
+  componentDidMount() {
+    Permissions.askAsync(Permissions.CAMERA).then(res=>{
+      const { status } = res;
+      console.log("hasCameraPermission",res)
+      this.setState({hasCameraPermission: status === 'granted'});
+    })
+    this.tickTimer = setInterval(this._tick,2000);
   }
 
   componentWillUnmount() {
-    // this._notificationSubscription && this._notificationSubscription.remove();
     console.log("ScanScreen WillUnmount");
-     if (this.clearTimer) { clearTimeout(this.clearTimer); this.timer = null;}
-   }
-
-  _startClearTimeout = ()=> {
-    if (this.clearTimer) { 
-      clearTimeout(this.clearTimer); 
-    }
-    this.clearTimer = setTimeout(this._handleClear,5000);
-  } 
-  _handleClear = ()=>{
-    console.log("_handleClear");
-      if (this.state.shot) {
-        console.log("deleting old shot")
-       // FileSystem.deleteAsync(this.state.shot.uri,{idempotent:true}).then(res=>{
-        //  console.log("delete done");
-       // })
-      }
-      this.setState({wait:false, msg:"",shot:null});
+     if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
   }
+
+  _tick = ()=> {
+     if (this.props.isFocused) {
+      console.log("scan");
+     }
+    
+  }
+
+  
   render() {
     const { hasCameraPermission,msg } = this.state;
    // console.log(this.props);
-    const isFocused = this.props.isFocused;
+    const {isFocused,navigation} = this.props;
+   // const isFocused = navigation.isFocused();
+
+
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     } else if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     } else if (!isFocused) {
       console.log("scan inactive");
-      return <Text>Inactive</Text>;
+      return (
+        <View>
+        <Text>Inactive - {JSON.stringify(navigation.state)}</Text>
+        <Button title="XX" onPress={()=>this.props.navigation.dismiss()}> </Button>
+        <NavContext.Consumer>
+          {value => {
+              console.log("NavContext.Consumer",value)
+             return (<Text>{JSON.stringify(value)}</Text>)
+            }}
+        </NavContext.Consumer>
+        </View>
+      );
+    } else if (true) {
+      console.log("scan active");
+      return (<Text>Active - {JSON.stringify(navigation.state)}</Text>);
     } else {
       console.log("scan active");
       return (
@@ -220,5 +234,6 @@ function mapStateToProps(state) {
 export default compose(
   withApollo,
   withNavigationFocus,
+  withNavigation,
   connect(mapStateToProps,{}),
 )(ScanScreen);

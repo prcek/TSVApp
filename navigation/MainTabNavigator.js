@@ -1,6 +1,6 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Platform , Text} from 'react-native';
+//import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
@@ -8,14 +8,16 @@ import HomeScreen from '../screens/HomeScreen';
 import ScanScreen from '../screens/ScanScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import InfoScreen from '../screens/InfoScreen';
+import TicketScreen from '../screens/TicketScreen';
 import AuthScreen from '../screens/AuthScreen';
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: HomeScreen
+  
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: 'Akce',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -30,7 +32,7 @@ HomeStack.navigationOptions = {
 
 
 const ScanStack = createStackNavigator({
-  Scan: ScanScreen,
+  Scan: ScanScreen
 });
 
 ScanStack.navigationOptions = {
@@ -42,6 +44,24 @@ ScanStack.navigationOptions = {
         Platform.OS === 'ios'
           ? `ios-qr-scanner${focused ? '' : '-outline'}`
           : 'md-qr-scanner'
+      }
+    />
+  ),
+};
+
+const TicketStack = createStackNavigator({
+  Ticket: TicketScreen,
+});
+
+TicketStack.navigationOptions = {
+  tabBarLabel: 'Vstupenka',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-paper${focused ? '' : '-outline'}`
+          : 'md-paper'
       }
     />
   ),
@@ -68,7 +88,7 @@ const AuthStack = createStackNavigator({
 });
 
 AuthStack.navigationOptions = {
-  tabBarLabel: 'Auth',
+  tabBarLabel: 'Přihlášení',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -97,12 +117,18 @@ InfoStack.navigationOptions = {
 
 
 export default createBottomTabNavigator({
-  //Home:HomeScreen, 
-  //Scan:ScanScreen,
-  //Auth:AuthScreen
+ // Home:HomeScreen, 
+ // Scan:ScanScreen,
+ // Auth:AuthScreen,
   HomeStack,
   ScanStack,
-  AuthStack,
+  TicketStack,
   SettingsStack,
+  AuthStack,
   InfoStack,
+},{
+  //initialRouteName:"ScanStack",
+  //backBehavior:null,
+  //initialRoute:"ScanStack",
+  
 });

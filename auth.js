@@ -107,7 +107,7 @@ function doRelogin() {
                     resolve({ok:false,err:"network problem"})
                 })
             } else {
-                console.log("relogin not needed");
+                //console.log("relogin not needed");
                 resolve({ok:true});
             }
         } else {

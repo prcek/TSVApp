@@ -4,11 +4,13 @@
 import React from 'react';
 import { Constants } from 'expo';
 import { AsyncStorage, Text, View , Button,FlatList} from 'react-native';
+import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import EventList from '../components/EventList';
 import TicketInput from '../components/TicketInput';
 import gql from 'graphql-tag';
+import NavContext from '../navigation/NavContext';
 var jwtDecode = require('jwt-decode');
 
 const GQL_PING=gql`
@@ -21,7 +23,7 @@ query Ping {
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'home',
+    title: 'Akce',
   };
 
   constructor(props) {
@@ -30,10 +32,7 @@ class HomeScreen extends React.Component {
   }
 
   _handleTest = () =>{
-    console.log("handle test");
-    this.props.client.query({query:GQL_PING})
-      .then(data => console.log(data))
-      .catch(error => console.log(error));
+    this.props.navigation.navigate("Scan");
   }
   /*
   componentWillMount() {
@@ -45,7 +44,7 @@ class HomeScreen extends React.Component {
   */
 
   render() {
-    const {auth_ok,event} = this.props;
+    const {auth_ok,navigation} = this.props;
     console.log("auth_ok",auth_ok);
    
     return (
@@ -55,6 +54,10 @@ class HomeScreen extends React.Component {
         ):(
           <Text>Please login first!</Text>
         )}
+        <NavContext.Consumer>
+          {value => (<Text>{JSON.stringify(value)}</Text>)}
+        </NavContext.Consumer>
+        <Text>navigation state: {JSON.stringify(navigation.state)}</Text>
         <TicketInput />
         <EventList />
         <Button onPress={this._handleTest} title="test"/>
@@ -76,5 +79,6 @@ function mapStateToProps(state) {
 
 export default compose(
   withApollo,
+  withNavigation,
   connect(mapStateToProps,{}),
 )(HomeScreen);

@@ -5,8 +5,11 @@
     "slug": "TSVApp",
     "privacy": "public",
     "sdkVersion": "30.0.0",
-    "platforms": ["ios", "android"],
-    "version": "1.0.1",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -15,8 +18,9 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0,
-      "enabled": true
+      "fallbackToCacheTimeout": 60000,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -29,7 +33,6 @@
       "package": "com.prcek.tsvapp"
     },
     "extra": {
-      
       "auth_url_base": "https://evidence.tsstarlet.com/spa_auth",
       "status_url_base": "https://evidence.tsstarlet.com/spa_status",
       "gql_url": "https://evidence.tsstarlet.com/graphql",

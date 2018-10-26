@@ -14,28 +14,38 @@ import gql from 'graphql-tag';
 import { setAuth, clearAuth } from './../actions'
 import { doRelogin } from './../auth';
 var jwtDecode = require('jwt-decode');
-
+import NavContext from './NavContext';
 
 import MainTabNavigator from './MainTabNavigator';
 //import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 const AppNavigator = createSwitchNavigator({
-  // You could add another route here for authentication.
-  // Read more at https://reactnavigation.org/docs/en/auth-flow.html
   Main: MainTabNavigator,
 });
+
+function dump_nav(r) {
+
+  if (r && ('index' in r)) {
+    return r.routes[r.index].routeName+"/"+dump_nav(r.routes[r.index]);
+  } else {
+    return ""
+  }
+}
 
 class RootNavigation extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      nav_path:null,
+    }
     const httpLink = createHttpLink({
       uri: Constants.manifest.extra.gql_url, 
     });
     console.log("using gqlurl",Constants.manifest.extra.gql_url);
     const authLink = setContext((_, { headers }) => {
       // get the authentication token from local storage if it exists
-      console.log("authLink set context");
+      //console.log("authLink set context");
       const token = this.props.auth_token;
       // return the headers to the context so httpLink can read them
       return {
@@ -57,7 +67,7 @@ class RootNavigation extends React.Component {
     //console.log("tick")
     doRelogin().then(res=>{
       if (!res.ok) { 
-        console.log("_tick.doRelogin failed:",res);
+        //console.log("_tick.doRelogin failed:",res);
       }
     })
   }
@@ -78,7 +88,12 @@ class RootNavigation extends React.Component {
   render() {
     return (
       <ApolloProvider client={this.client}>
-        <AppNavigator />
+        <NavContext.Provider value={this.state.nav_path} >
+        <AppNavigator onNavigationStateChange={(prevState, currentState)=>{
+          this.setState({nav_path:dump_nav(currentState)});
+          console.log("AppNavigator.onNavigationStateChange",dump_nav(currentState));
+        }}/>
+        </NavContext.Provider>
       </ApolloProvider>
     );
   }

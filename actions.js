@@ -31,6 +31,14 @@ const clearEvent = () => ({
     type: 'CLEAR_EVENT'  
 })
 
+const setTicket = (ticket_key) => ({
+    type: 'SET_TICKET',
+    ticket_key
+})
+
+const clearTicket = () => ({
+    type: 'CLEAR_TICKET'  
+})
 
 export {
     setAuth,
@@ -40,4 +48,6 @@ export {
     setOnline,
     setEvent,
     clearEvent,
+    setTicket,
+    clearTicket
 }
