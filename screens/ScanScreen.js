@@ -202,13 +202,13 @@ class ScanScreen extends React.Component {
       })
      .then(res => {
        console.log("checkQR res:",res)
-       this.setState({msg:"ok"});
-       this._startClearTimeout();
+       this.setState({msg:"ok ["+data+"]"});
+     //  this._startClearTimeout();
      })
      .catch(error => {
       console.log("checkQR error:",error)
-      this.setState({msg:"error"});
-      this._startClearTimeout();
+      this.setState({msg:"error ["+data+"]"});
+     // this._startClearTimeout();
     });
   }
 }
