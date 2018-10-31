@@ -78,7 +78,7 @@ class ScanScreen extends React.Component {
 
   _tick = ()=> {
      if (this.props.isFocused) {
-      console.log("scan");
+      console.log("scan is active");
      }
     
   }
@@ -109,7 +109,7 @@ class ScanScreen extends React.Component {
         </NavContext.Consumer>
         </View>
       );
-    } else if (true) {
+    } else if (false) {
       console.log("scan active");
       return (<Text>Active - {JSON.stringify(navigation.state)}</Text>);
     } else {
@@ -173,17 +173,14 @@ class ScanScreen extends React.Component {
           <View style={s.overlay}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <Text style={{ backgroundColor:"red"}}> {msg} </Text>
-              <Button onPress={this._fakeQR} title="QR1"/>
-              { this.state.shot && (
-                  <Image source={{ uri:this.state.shot.uri}}   style={{ width: 100, height: 100, resizeMode: 'contain' }} />
-              )}
+              <Button onPress={this._fakeTicket} title="FakeTicket"/>
             </View>
           </View>
         </View>
       );
     }
   }
-  _fakeQR = () =>{
+  _fakeTicket = () =>{
     this._handleBarCodeRead({type:"qr",data:"xxxx"});
    }
 
@@ -195,14 +192,7 @@ class ScanScreen extends React.Component {
        return;
      } else {
       
-       this.setState({wait:true,msg:"..."});
-       if (this.camera) {
-        //takeSnapshotAsync(this.view,{format:'png',quality:1,result:'data-uri',height:100,width:100}).then((shot)=>{
-         this.camera.takePictureAsync({quality:0,exif:false,width:100}).then((shot)=>{
-           console.log("takeSnapshotAsync",shot);
-           this.setState({shot:shot});
-         })
-       }
+       this.setState({wait:true,msg:"["+data+"]"});
      }
 
      this.props.client.query({

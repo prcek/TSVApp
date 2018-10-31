@@ -48,7 +48,7 @@ class HomeScreen extends React.Component {
     console.log("auth_ok",auth_ok);
    
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
         {auth_ok?(
           <Text>logged in</Text>
         ):(

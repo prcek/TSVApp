@@ -9,6 +9,7 @@ import ScanScreen from '../screens/ScanScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import InfoScreen from '../screens/InfoScreen';
 import TicketScreen from '../screens/TicketScreen';
+import InputScreen from '../screens/InputScreen';
 import AuthScreen from '../screens/AuthScreen';
 
 const HomeStack = createStackNavigator({
@@ -67,6 +68,23 @@ TicketStack.navigationOptions = {
   ),
 };
 
+const InputStack = createStackNavigator({
+  Input: InputScreen,
+});
+
+InputStack.navigationOptions = {
+  tabBarLabel: 'Rucni zadani',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-hand${focused ? '' : '-outline'}`
+          : 'md-hand'
+      }
+    />
+  ),
+};
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -122,8 +140,9 @@ export default createBottomTabNavigator({
  // Auth:AuthScreen,
   HomeStack,
   ScanStack,
+  InputStack,
   TicketStack,
-  SettingsStack,
+  //SettingsStack,
   AuthStack,
   InfoStack,
 },{

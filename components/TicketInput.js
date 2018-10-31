@@ -74,9 +74,12 @@ class TicketInput extends React.Component {
 
   _process_text = (v) => {
     let new_v = v.toUpperCase();
-    if (new_v.length==4 || new_v.length==9) {
-      new_v+='-'
-    }
+
+    if (this.state.value && new_v && new_v.length>this.state.value.length) {
+      if (new_v.length==4 || new_v.length==9) {
+        new_v+='-'
+      }
+    } 
     this.setState({value:new_v});
     this.lookup_candidates(new_v);
   };
@@ -98,6 +101,7 @@ class TicketInput extends React.Component {
         <TextInput style={{height: 40, width:250, borderColor: 'gray', borderWidth: 1}}
         autoCapitalize={"characters"}
         autoCorrect={false}
+        clearButtonMode={'always'}
         onChangeText={this._process_text}
         value={value}/>
       </View>
