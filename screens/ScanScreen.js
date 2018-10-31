@@ -60,6 +60,7 @@ class ScanScreen extends React.Component {
 
     this.camera = null;
     this.tickTimer = null;
+    this.clearTimeout = null;
   }
 
   componentDidMount() {
@@ -74,13 +75,23 @@ class ScanScreen extends React.Component {
   componentWillUnmount() {
     console.log("ScanScreen WillUnmount");
      if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
+     if (this.clearTimeout) { clearTimeout(this.clearTimeout); this.clearTimeout = null;}
+
   }
 
   _tick = ()=> {
      if (this.props.isFocused) {
       console.log("scan is active");
      }
-    
+  }
+
+  _clear = ()=> {
+    this.setState({wait:false,msg:""})
+ }
+
+  startClearTimeout() {
+    if (this.clearTimeout) { clearTimeout(this.clearTimeout); this.clearTimeout = null;}
+    this.clearTimeout = setTimeout(this._clear,2000);
   }
 
   
@@ -191,7 +202,7 @@ class ScanScreen extends React.Component {
        console.log("ignore")
        return;
      } else {
-      
+       this.startClearTimeout(); 
        this.setState({wait:true,msg:"["+data+"]"});
      }
 
