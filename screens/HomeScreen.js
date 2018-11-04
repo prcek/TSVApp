@@ -2,12 +2,12 @@
 
 
 import React from 'react';
-import { Text, View , Button} from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { View } from 'react-native';
 import { connect } from 'react-redux'
 import { compose } from "react-apollo";
 import EventList from '../components/EventList';
 import NoAuthWarn from '../components/NoAuthWarn';
+import CurrentEvent from '../components/CurrentEvent';
 import Styles from '../constants/Styles';
 
 
@@ -21,11 +21,12 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const {auth_ok,navigation} = this.props;
+    const {auth_ok} = this.props;
    
     return (
       <View style={Styles.screen_view}>
         <NoAuthWarn />
+        <CurrentEvent />
         {auth_ok && (
            <EventList />
         )}
@@ -46,6 +47,5 @@ function mapStateToProps(state) {
 
 
 export default compose(
-  withNavigation,
   connect(mapStateToProps,{}),
 )(HomeScreen);

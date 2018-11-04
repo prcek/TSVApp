@@ -2,7 +2,7 @@
 const event = (state={event_id:null,event_title:null,event_date:null,ticket_key:null}, action) => {
     switch (action.type) {
       case 'SET_EVENT':
-        console.log("SET_AUTH",action)
+        console.log("SET_EVENT",action)
         return  Object.assign({}, state, {
           event_id: action.event_id,
           event_title: action.event_title,
