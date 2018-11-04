@@ -24,16 +24,16 @@ class EventListItem extends React.PureComponent {
   };
 
   render() {
-    const textColor = this.props.selected ? "red" : "black";
+    const textColor = this.props.selected ? "green" : "white";
     const mm = Moment(this.props.date).toDate();
 
     return (
       <TouchableOpacity onPress={this._onPress}>
-        <View style={{minHeight: 40, flex: 1, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: 'powderblue'}}>
-          <Text style={{ color: textColor }}>
+        <View style={{padding:4, flex: 1, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: textColor}}>
+          <Text style={{  fontWeight: 'bold', fontSize:15}}>
             {this.props.title}
           </Text>
-          <Text style={{ color: textColor }}>
+          <Text style={{ }}>
             {mm.toLocaleDateString()+" "+mm.toLocaleTimeString()}
           </Text>
         </View>
@@ -103,8 +103,7 @@ class EventList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Text>Seznam akcí</Text>
-        <Button onPress={()=>this.fetchEvents()} title="přenačíst"/>
+        <Button onPress={()=>this.fetchEvents()} title="načíst akce"/>
         <FlatList 
           data={this.state.events}
           renderItem={this._renderItem}

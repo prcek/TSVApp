@@ -96,11 +96,12 @@ class AuthScreen extends React.Component {
       const { login, password, wait, auth_res} = this.state;
       const { auth_token, auth_ok , auth_user} = this.props;
       return (
-        <View style={{ padding: 16, flex: 1, flexDirection: 'column',justifyContent: 'flex-start', alignItems: 'stretch' }}>
+        <View style={Styles.screen_view}>
           {auth_ok?(
             <React.Fragment>
                 <Text style={Styles.text_ok}>Uživatel {auth_user.name} je přihlášen(a)</Text>
                 <Button
+                  style={Styles.button}
                   disabled={ wait }
                   onPress={this._handleLogout}
                   title="Odhlásit"
@@ -113,6 +114,7 @@ class AuthScreen extends React.Component {
               <TextInput autoFocus returnKeyType = { "next" } placeholder={"přihlašovací jméno"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} style={Styles.input} onSubmitEditing={this._handleFocusPass} value={login} onChangeText={this._handleChangeLogin}/> 
               <TextInput ref={this.pass_field} placeholder={"heslo"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={Styles.input} value={password} onSubmitEditing={this._handleLogin} onChangeText={this._handleChangePassword}/>
                 <Button
+                  style={Styles.button}
                   disabled={ wait || !login || !password}
                   onPress={this._handleLogin}
                   title="přihlásit"

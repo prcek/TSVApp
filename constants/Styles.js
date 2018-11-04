@@ -13,6 +13,19 @@ const styles = StyleSheet.create({
       fontSize: 25,
     },
     
+    button: {
+        height:50,
+        margin:4,
+    },
+
+    screen_view: { 
+        padding: 16, 
+        flex: 1, 
+        flexDirection: 'column',
+        justifyContent: 'flex-start', 
+        alignItems: 'stretch'
+    },
+
     input: Platform.OS === 'ios' ? {
       margin:4,
       //fontWeight: 'bold',
