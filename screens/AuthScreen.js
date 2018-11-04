@@ -1,38 +1,12 @@
 
 import React from 'react';
 import { Constants } from 'expo';
-import { Platform,StyleSheet, Text, View , TextInput, Button} from 'react-native';
+import { Platform,ActivityIndicator, Text, View , TextInput, Button} from 'react-native';
 import { connect } from 'react-redux'
 import { doLogin,doLogout} from './../auth';
 
 import Styles from '../constants/Styles';
 
-/*
-
-const styles = StyleSheet.create({
-  text_ok: {
-    fontWeight: 'bold',
-    color:"green",
-    fontSize: 25,
-  },
-  text_ko: {
-    fontWeight: 'bold',
-    color:"red",
-    fontSize: 25,
-  },
-  
-  input: Platform.OS === 'ios' ? {
-    //margin:16,
-    //fontWeight: 'bold',
-    fontSize: 25,
-    borderColor: 'gray', 
-    borderWidth: 1
-  }:{
-    //fontWeight: 'bold',
-    fontSize: 25,
-  },
-});
-*/
 
 class AuthScreen extends React.Component {
 
@@ -113,13 +87,15 @@ class AuthScreen extends React.Component {
               <Text style={Styles.text_ko}>Aktuálně NEJSTE přihlášen(a)</Text>
               <TextInput autoFocus returnKeyType = { "next" } placeholder={"přihlašovací jméno"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} style={Styles.input} onSubmitEditing={this._handleFocusPass} value={login} onChangeText={this._handleChangeLogin}/> 
               <TextInput ref={this.pass_field} placeholder={"heslo"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={Styles.input} value={password} onSubmitEditing={this._handleLogin} onChangeText={this._handleChangePassword}/>
-                <Button
+              
+              <Button
                   style={Styles.button}
                   disabled={ wait || !login || !password}
                   onPress={this._handleLogin}
                   title="přihlásit"
                   //color="#841584"
                 />
+              <ActivityIndicator animating={wait} />
             </React.Fragment>
           )}
 
