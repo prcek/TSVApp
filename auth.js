@@ -120,7 +120,11 @@ function doRelogin() {
 }
 
 function doLogout() {
-
+    return new Promise(function(resolve, reject) {
+        store.dispatch(clearAuth());
+        resolve({ok:true})
+    });
+    
 }
 
 function checkAuth() {
