@@ -40,12 +40,18 @@ class AuthScreen extends React.Component {
       title: 'Přihlášení',
     };
 
-    state = {
-      login: null,
-      password: null,
-      wait:false,
-      auth_res:""
-    };
+    constructor(props) {
+      super(props);
+      this.state = {
+        login: props.last_login?props.last_login:null,
+        password: null,
+        wait:false,
+        auth_res:""
+      };
+      
+      this.pass_field = React.createRef();
+    }
+  
 
     _handleChangeLogin = (v) => {
       this.setState({login:v});
@@ -62,6 +68,8 @@ class AuthScreen extends React.Component {
         } else {
           this.setState({wait:false,auth_res:"failed"});
           alert("přihlášení se nepodařilo");
+          this.setState({password:""});
+          this._handleFocusPass();
           //alert(res.err);
         }
       });
@@ -76,6 +84,13 @@ class AuthScreen extends React.Component {
       
     }
 
+    _handleFocusPass = () => {
+      //console.log("_handleFocusPass")
+      if (this.pass_field.current) {
+        //console.log("ooooo")
+        this.pass_field.current.focus();
+      }
+    }
  
     render() {
       const { login, password, wait, auth_res} = this.state;
@@ -95,8 +110,8 @@ class AuthScreen extends React.Component {
           ):(
             <React.Fragment>
               <Text style={Styles.text_ko}>Aktuálně NEJSTE přihlášen(a)</Text>
-              <TextInput autoCapitalize={"none"} autoCorrect={false} style={Styles.input} value={login} onChangeText={this._handleChangeLogin}/> 
-              <TextInput autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={Styles.input} value={password} onChangeText={this._handleChangePassword}/>
+              <TextInput autoFocus returnKeyType = { "next" } placeholder={"přihlašovací jméno"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} style={Styles.input} onSubmitEditing={this._handleFocusPass} value={login} onChangeText={this._handleChangeLogin}/> 
+              <TextInput ref={this.pass_field} placeholder={"heslo"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={Styles.input} value={password} onSubmitEditing={this._handleLogin} onChangeText={this._handleChangePassword}/>
                 <Button
                   disabled={ wait || !login || !password}
                   onPress={this._handleLogin}
@@ -126,6 +141,7 @@ function mapStateToProps(state) {
       auth_token: state.auth.token,
       auth_user: state.auth.user,
       auth_ok:state.auth.ok,
+      last_login:state.auth.last_login,
   }
 }
 

@@ -14,13 +14,16 @@ const styles = StyleSheet.create({
     },
     
     input: Platform.OS === 'ios' ? {
-      //margin:16,
+      margin:4,
       //fontWeight: 'bold',
       fontSize: 25,
       borderColor: 'gray', 
       borderWidth: 1
     }:{
       //fontWeight: 'bold',
+      //margin:4,
+      paddingLeft:5,
+      height:50,
       fontSize: 25,
     },
   });
