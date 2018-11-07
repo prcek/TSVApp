@@ -5,16 +5,20 @@ import TicketInput from '../components/TicketInput';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
 import Styles from '../constants/Styles';
+import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux'
+import { compose } from "react-apollo";
 
-export default class InputScreen extends React.Component {
+
+class InputScreen extends React.Component {
     static navigationOptions = {
       title: 'Ruční zadání kódu vstupenky',
     };
 
     _handleTicket = (t) => {
-      alert("ticket:"+t);
+      this.props.navigation.navigate('Ticket',{ticket_key:t});
     }
-    
+
     render() {
       return (
         <View style={Styles.screen_view}>
@@ -26,3 +30,9 @@ export default class InputScreen extends React.Component {
     }
 }
 
+
+
+
+export default compose(
+  withNavigation,
+)(InputScreen);
