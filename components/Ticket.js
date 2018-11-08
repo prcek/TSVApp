@@ -81,9 +81,9 @@ class Ticket extends React.Component {
   }
 
   render() {
-    const {event_id,auth_ok,ticket_key}  = this.props;
+    const {event_id,auth_ok,ticket_key,backTo}  = this.props;
     const {loading,ticket,ticket_err,ticket_not_found} = this.state
-    return <Text style={Styles.text_ok}>{JSON.stringify({props:{event_id,auth_ok,ticket_key},state:{loading,ticket,ticket_err,ticket_not_found}})}</Text>
+    return <Text style={Styles.text_ok}>{JSON.stringify({props:{backTo,event_id,auth_ok,ticket_key},state:{loading,ticket,ticket_err,ticket_not_found}})}</Text>
   }
 }
 

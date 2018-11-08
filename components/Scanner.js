@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
 import { BarCodeScanner, Permissions ,Camera} from 'expo';
@@ -13,16 +13,19 @@ class Scanner extends React.Component {
       hasCameraPermission: null,
     }
     this.tickTimer=null;
+    this.camera = null;
   }
 
   _tick = ()=>{
-    console.log("Scanner TICK",this.props);
+    console.log("Scanner TICK");
+    this.setState({ticker:1});
   }
+
   componentDidMount() {
     console.log("Scanner componentDidMount");
     Permissions.askAsync(Permissions.CAMERA).then(res=>{
       const { status } = res;
-      console.log("hasCameraPermission",res)
+      //console.log("hasCameraPermission",res)
       this.setState({hasCameraPermission: status === 'granted'});
     })
     this.tickTimer = setInterval(this._tick,2000);
@@ -40,16 +43,27 @@ class Scanner extends React.Component {
   };
 
   render() {
+      const { hasCameraPermission } = this.state;
+      if (hasCameraPermission === null) {
+        return <Text>Requesting for camera permission</Text>;
+      } else if (hasCameraPermission === false) {
+        return <Text>No access to camera</Text>;
+      }
+
       return (
-        <Camera //ref={ref => { this.camera = ref; }}
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-        }}
-        onBarCodeScanned={this._handleBarCodeRead}
-        style={Styles.scanner_view}
-        focusDepth={1}
-        //type={this.state.type}
+        <View style={{flex:1}}>
+        <Camera ref={ref => { this.camera = ref; }}
+          barCodeScannerSettings={{
+            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+          }}
+          onBarCodeScanned={this._handleBarCodeRead}
+          style={{ flex: 1 }}
+          //style={StyleSheet.absoluteFill}
+          focusDepth={1}
+          //type={this.state.type}
+          //useCamera2Api
         />
+        </View>
       )
   }
 }

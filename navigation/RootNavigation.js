@@ -91,7 +91,7 @@ class RootNavigation extends React.Component {
         <NavContext.Provider value={this.state.nav_path} >
         <AppNavigator onNavigationStateChange={(prevState, currentState)=>{
           this.setState({nav_path:dump_nav(currentState)});
-          console.log("AppNavigator.onNavigationStateChange",dump_nav(currentState));
+          //console.log("AppNavigator.onNavigationStateChange",dump_nav(currentState));
         }}/>
         </NavContext.Provider>
       </ApolloProvider>

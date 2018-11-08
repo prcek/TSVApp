@@ -106,18 +106,7 @@ class ScanScreen extends React.Component {
    // console.log(this.props);
     const {isFocused,navigation} = this.props;
    // const isFocused = navigation.isFocused();
-    return (
-      <NavContext.Consumer>
-        {value =>{
-          return (
-            <React.Fragment>
-              <Scanner route={value} onTicket={this._handleTicket} />
-            </React.Fragment>
-          )
-        }}
-      </NavContext.Consumer>
-    )
-
+  
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     } else if (hasCameraPermission === false) {
@@ -136,9 +125,6 @@ class ScanScreen extends React.Component {
         </NavContext.Consumer>
         </View>
       );
-    } else if (false) {
-      console.log("scan active");
-      return (<Text>Active - {JSON.stringify(navigation.state)}</Text>);
     } else {
       console.log("scan active");
       return (
@@ -149,7 +135,7 @@ class ScanScreen extends React.Component {
             focusDepth={1}
             type={this.state.type}
           >
-           
+          {/*
            <View
               style={{
                 flex: 1,
@@ -195,7 +181,7 @@ class ScanScreen extends React.Component {
 
             </View>
 
-
+              */}
           </Camera>
           <View style={s.overlay}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>

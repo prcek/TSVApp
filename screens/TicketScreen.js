@@ -37,7 +37,7 @@ class TicketScreen extends React.Component {
       }
     }
 
-   
+    
 
    
 
@@ -45,11 +45,12 @@ class TicketScreen extends React.Component {
     render() {
       const { navigation } = this.props;
       const ticket_key = navigation.getParam('ticket_key', 'NO-TICKET');
+      const backTo = navigation.getParam('backTo', 'Scan');
       return (
         <View style={Styles.screen_view}>
           <Text>Ticket!</Text>
           {ticket_key && (
-            <Ticket ticket_key={ticket_key}/>
+            <Ticket ticket_key={ticket_key} backTo={backTo}/>
           )}
         </View>
       );

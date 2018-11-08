@@ -19,7 +19,7 @@ import CurrentEvent from '../components/CurrentEvent';
 
 class ScanScreen extends React.Component {
   static navigationOptions = {
-    title: 'scan',
+    title: 'Scan kódu vstupenky',
   };
 
   
@@ -29,7 +29,7 @@ class ScanScreen extends React.Component {
   }
 
   _handleTicket = (t) => {
-    this.props.navigation.navigate('Ticket',{ticket_key:t});
+    this.props.navigation.navigate('Ticket',{ticket_key:t,backTo:'Scan'});
   }
 
   
@@ -38,13 +38,19 @@ class ScanScreen extends React.Component {
       <View style={Styles.screen_view}>
         <NoAuthWarn />
         <CurrentEvent />
+      
+        
         <NavContext.Consumer>
           {value =>{
+            if (value != 'Main/ScanStack/Scan/') {
+              return (<Text> inactive </Text>)
+            }
             return (
               <Scanner route={value} onTicket={this._handleTicket} />
             )
           }}
         </NavContext.Consumer>
+        
       </View>
     )
   }
@@ -63,5 +69,7 @@ function mapStateToProps(state) {
 
 export default compose(
   withNavigation,
+  withNavigationFocus,
+  
   connect(mapStateToProps,{}),
 )(ScanScreen);
