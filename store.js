@@ -11,6 +11,8 @@ const psconfig = {
     blacklist: ['server'], 
     version:redux_state_version,
     migrate: (state) => {
+        console.log("STORE MIGRATION STEP",state);
+        //TODO clean old auth
         if (state===undefined) return Promise.resolve({});
         if ((state._persist) && (state._persist.version<redux_state_version)) {
             console.log("redux state reset");

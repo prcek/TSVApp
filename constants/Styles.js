@@ -33,6 +33,15 @@ const styles = StyleSheet.create({
         alignItems: 'stretch'
     },
 
+    scanner_view: { 
+      padding: 16, 
+      flex: 1, 
+      flexDirection: 'column',
+      justifyContent: 'flex-start', 
+      alignItems: 'stretch'
+  },
+
+
     input: Platform.OS === 'ios' ? {
       margin:4,
       //fontWeight: 'bold',

@@ -74,7 +74,10 @@ class TicketInput extends React.Component {
    
 
     this.setState({value:new_v,valid_value:(new_v.length==14)});
-    this.lookup_candidates(new_v);
+    if (this.props.auth_ok) {
+      this.lookup_candidates(new_v);
+    }
+    
   };
   _onPressCandidate = ()=>{
     if (this.state.candidates.length==1) {
