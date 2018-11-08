@@ -2,34 +2,45 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux'
-import { compose } from "react-apollo";
+import { compose, withApollo} from "react-apollo";
 import Styles from '../constants/Styles';
 import { withNavigation } from 'react-navigation';
+import Ticket from '../components/Ticket';
+import gql from 'graphql-tag';
+import Moment from 'moment';
+
+
+const GQL_GET_TICKET=gql`
+query EventTicketGet($ticket_key: String!) {
+  eventTicketGet(ticket_key:$ticket_key) {
+    event_id
+    name
+    cost
+    status
+    used
+    used_by
+    used_datetime
+  }
+}
+`;
+
+
 
 class TicketScreen extends React.Component {
     static navigationOptions = {
       title: 'ticket',
     };
 
-    fetchTicket() {
-      const { navigation } = this.props;
-      console.log("TicketScreen, fetchTicket")
-      const ticket_key = navigation.getParam('ticket_key', 'NO-TICKET');
-      if (ticket_key!="NO-TICKET") {
-        console.log("TicketScreen, loading ticket",ticket_key);
+    constructor(props) {
+      super(props);
+      this.state = {
       }
     }
 
-    componentDidMount() {
-      console.log("TicketScreen, DidMount")
-      this.fetchTicket();
-    }
+   
 
-    componentDidUpdate() {
-     
-      console.log("TicketScreen, DidUpdate")
-      this.fetchTicket();
-    }
+   
+
 
     render() {
       const { navigation } = this.props;
@@ -38,7 +49,7 @@ class TicketScreen extends React.Component {
         <View style={Styles.screen_view}>
           <Text>Ticket!</Text>
           {ticket_key && (
-            <Text style={Styles.text_ok}>{ticket_key}</Text>
+            <Ticket ticket_key={ticket_key}/>
           )}
         </View>
       );
@@ -49,12 +60,12 @@ class TicketScreen extends React.Component {
 function mapStateToProps(state) {
   return { 
       auth_ok: state.auth.ok,
-      ticket_key: state.event.ticket_key
   }
 }
 
 
 export default compose(
   withNavigation,
+  withApollo,
   connect(mapStateToProps,{}),
 )(TicketScreen);

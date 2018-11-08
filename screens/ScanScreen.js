@@ -29,7 +29,7 @@ class ScanScreen extends React.Component {
   }
 
   _handleTicket = (t) => {
-    //this.props.navigation.navigate('Ticket',{ticket_key:t});
+    this.props.navigation.navigate('Ticket',{ticket_key:t});
   }
 
   
