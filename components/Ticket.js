@@ -5,6 +5,7 @@ import Styles from '../constants/Styles';
 import { compose, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
 import { withNavigation } from 'react-navigation';
+import Moment from 'moment';
 
 const GQL_GET_TICKET=gql`
 query EventTicketGet($ticket_key: String!) {
@@ -223,10 +224,13 @@ class Ticket extends React.Component {
     let ticket_info = this.renderTicketInfo(ticket);
     
     if (ticket.used) {
+      const mm = Moment(ticket.used_datetime).toDate();
       return(
         <React.Fragment>
         <Text style={Styles.text_ko}>Použitá vstupenka</Text>
           {ticket_info}
+          <Text>zaevidoval: {ticket.used_by}</Text>
+          <Text>čas:  {mm.toLocaleDateString()+" "+mm.toLocaleTimeString()}</Text>
           {scanBtns}
         </React.Fragment>
       )
