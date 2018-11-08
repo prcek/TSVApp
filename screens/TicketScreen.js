@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View , Button} from 'react-native';
 import { connect } from 'react-redux'
 import { compose, withApollo} from "react-apollo";
 import Styles from '../constants/Styles';
@@ -8,6 +8,8 @@ import { withNavigation } from 'react-navigation';
 import Ticket from '../components/Ticket';
 import gql from 'graphql-tag';
 import Moment from 'moment';
+import NoAuthWarn from '../components/NoAuthWarn';
+import CurrentEvent from '../components/CurrentEvent';
 
 
 const GQL_GET_TICKET=gql`
@@ -37,10 +39,13 @@ class TicketScreen extends React.Component {
       }
     }
 
-    
+    _toScan = ()=>{
+      this.props.navigation.navigate('Scan');
+    };
 
-   
-
+    _toManual = ()=>{
+      this.props.navigation.navigate('Input');
+    };
 
     render() {
       const { navigation } = this.props;
@@ -49,6 +54,7 @@ class TicketScreen extends React.Component {
       const vt = (ticket_key && ticket_key.length>0 && ticket_key!='NO-TICKET')
       return (
         <View style={Styles.screen_view}>
+          <NoAuthWarn />
           {vt?(
             <React.Fragment>
               <Text style={Styles.text}>{ticket_key}</Text>
@@ -57,6 +63,16 @@ class TicketScreen extends React.Component {
           ):(
             <React.Fragment>
                 <Text style={Styles.text_ko}>Naskenuj vstupenku nebo zadej kód ručně</Text>
+                <Button
+                    style={Styles.button}
+                    onPress={this._toScan}
+                    title={"skenovat"}
+                />
+                <Button
+                    style={Styles.button}
+                    onPress={this._toManual}
+                    title={"zadat kód"}
+                />
             </React.Fragment>
           )}
         </View>
