@@ -10,6 +10,7 @@ import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
 import NavContext from '../navigation/NavContext';
 import { connect } from 'react-redux'
+import Scanner from '../components/Scanner';
 
 
 const GQL_CHEKCQR=gql`
@@ -64,23 +65,25 @@ class ScanScreen extends React.Component {
   }
 
   componentDidMount() {
+    console.log("SCAN DID MOUNT");
     Permissions.askAsync(Permissions.CAMERA).then(res=>{
       const { status } = res;
       console.log("hasCameraPermission",res)
       this.setState({hasCameraPermission: status === 'granted'});
     })
-    this.tickTimer = setInterval(this._tick,2000);
+    //this.tickTimer = setInterval(this._tick,2000);
   }
 
   componentWillUnmount() {
     console.log("ScanScreen WillUnmount");
-     if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
+     //if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
      if (this.clearTimeout) { clearTimeout(this.clearTimeout); this.clearTimeout = null;}
 
   }
 
   _tick = ()=> {
-     if (this.props.isFocused) {
+
+     if ((this.props.navigation.state) && (this.props.navigation.state.routeName=="Scan")) {
       console.log("scan is active");
      }
   }
@@ -94,13 +97,26 @@ class ScanScreen extends React.Component {
     this.clearTimeout = setTimeout(this._clear,2000);
   }
 
+  _handleTicket = (t) => {
+    this.props.navigation.navigate('Ticket',{ticket_key:t});
+  }
   
   render() {
     const { hasCameraPermission,msg } = this.state;
    // console.log(this.props);
     const {isFocused,navigation} = this.props;
    // const isFocused = navigation.isFocused();
-
+    return (
+      <NavContext.Consumer>
+        {value =>{
+          return (
+            <React.Fragment>
+              <Scanner route={value} onTicket={this._handleTicket} />
+            </React.Fragment>
+          )
+        }}
+      </NavContext.Consumer>
+    )
 
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
@@ -111,7 +127,7 @@ class ScanScreen extends React.Component {
       return (
         <View>
         <Text>Inactive - {JSON.stringify(navigation.state)}</Text>
-        <Button title="XX" onPress={()=>this.props.navigation.dismiss()}> </Button>
+        <Button title="XX" onPress={()=>this.props.navigation.navigate("Scan")}> </Button>
         <NavContext.Consumer>
           {value => {
               console.log("NavContext.Consumer",value)
