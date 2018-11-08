@@ -12,6 +12,12 @@ const styles = StyleSheet.create({
       color:"red",
       fontSize: 25,
     },
+
+    text: {
+      fontWeight: 'bold',
+      color:"black",
+      fontSize: 25,
+    },
     
     button: {
         height:50,

@@ -28,7 +28,7 @@ query EventTicketGet($ticket_key: String!) {
 
 class TicketScreen extends React.Component {
     static navigationOptions = {
-      title: 'ticket',
+      title: 'Vstupenka',
     };
 
     constructor(props) {
@@ -46,11 +46,18 @@ class TicketScreen extends React.Component {
       const { navigation } = this.props;
       const ticket_key = navigation.getParam('ticket_key', 'NO-TICKET');
       const backTo = navigation.getParam('backTo', 'Scan');
+      const vt = (ticket_key && ticket_key.length>0 && ticket_key!='NO-TICKET')
       return (
         <View style={Styles.screen_view}>
-          <Text>Ticket!</Text>
-          {ticket_key && (
-            <Ticket ticket_key={ticket_key} backTo={backTo}/>
+          {vt?(
+            <React.Fragment>
+              <Text style={Styles.text}>{ticket_key}</Text>
+              <Ticket ticket_key={ticket_key} backTo={backTo}/>
+            </React.Fragment>
+          ):(
+            <React.Fragment>
+                <Text style={Styles.text_ko}>Naskenuj vstupenku nebo zadej kód ručně</Text>
+            </React.Fragment>
           )}
         </View>
       );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, Button } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
 import { compose, withApollo} from "react-apollo";
@@ -80,9 +80,56 @@ class Ticket extends React.Component {
     }
   }
 
+  _handleReload = ()=>{
+    this.fetchTicket();
+  }
+
   render() {
     const {event_id,auth_ok,ticket_key,backTo}  = this.props;
     const {loading,ticket,ticket_err,ticket_not_found} = this.state
+
+    if (loading) {
+      return (
+        <Text> hledám vstupenku.... </Text>
+      )
+    }
+    if (ticket_err) {
+      return (
+        <React.Fragment>
+          <Text style={Styles.text_ko}>Chyba při hledání vstupenky. Jste online a přihlášený(á)?</Text>
+          <Button
+              style={Styles.button}
+              onPress={this._handleReload}
+              title="zkusit znova"
+          />
+        </React.Fragment>
+      )
+    }
+
+    if (ticket_not_found) {
+      return (
+        <React.Fragment>
+          <Text style={Styles.text_ko}>nenalezeno</Text>
+          <Button
+              style={Styles.button}
+              onPress={this._handleReload}
+              title="skenovat jinou"
+          />
+          <Button
+              style={Styles.button}
+              onPress={this._handleReload}
+              title="zadat ručně jinou"
+          />
+          <Button
+              style={Styles.button}
+              onPress={this._handleReload}
+              title="zkusit znova"
+          />
+        </React.Fragment>
+      )
+    }
+
+
     return <Text style={Styles.text_ok}>{JSON.stringify({props:{backTo,event_id,auth_ok,ticket_key},state:{loading,ticket,ticket_err,ticket_not_found}})}</Text>
   }
 }
