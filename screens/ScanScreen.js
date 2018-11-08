@@ -31,6 +31,9 @@ class ScanScreen extends React.Component {
   _handleTicket = (t) => {
     this.props.navigation.navigate('Ticket',{ticket_key:t,backTo:'Scan'});
   }
+  _toManual = ()=>{
+    this.props.navigation.navigate('Input');
+  };
 
   
   render() {
@@ -38,8 +41,11 @@ class ScanScreen extends React.Component {
       <View style={Styles.screen_view}>
         <NoAuthWarn />
         <CurrentEvent />
-      
-        
+        <Button
+                    style={Styles.button}
+                    onPress={this._toManual}
+                    title={"zadat ručně"}
+        />
         <NavContext.Consumer>
           {value =>{
             if (value != 'Main/ScanStack/Scan/') {
@@ -69,7 +75,7 @@ function mapStateToProps(state) {
 
 export default compose(
   withNavigation,
-  withNavigationFocus,
+ // withNavigationFocus,
   
   connect(mapStateToProps,{}),
 )(ScanScreen);

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {  View, KeyboardAvoidingView } from 'react-native';
+import {  View, Button } from 'react-native';
 import TicketInput from '../components/TicketInput';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
@@ -19,12 +19,22 @@ class InputScreen extends React.Component {
       this.props.navigation.navigate('Ticket',{ticket_key:t,backTo:'Input'});
     }
 
+    _toScan = ()=>{
+      this.props.navigation.navigate('Scan');
+    };
+
     render() {
       return (
         <View style={Styles.screen_view}>
           <NoAuthWarn />
           <CurrentEvent />
+          <Button
+            style={Styles.button}
+            onPress={this._toScan}
+            title={"skenovat"}
+          />
           <TicketInput onTicket={this._handleTicket} />
+         
         </View>
       );
     }

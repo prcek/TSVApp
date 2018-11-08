@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
 import { compose, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
+import { withNavigation } from 'react-navigation';
 
 const GQL_GET_TICKET=gql`
 query EventTicketGet($ticket_key: String!) {
@@ -84,6 +85,15 @@ class Ticket extends React.Component {
     this.fetchTicket();
   }
 
+
+  _toScan = ()=>{
+    this.props.navigation.navigate('Scan');
+  };
+
+  _toManual = ()=>{
+    this.props.navigation.navigate('Input');
+  };
+
   render() {
     const {event_id,auth_ok,ticket_key,backTo}  = this.props;
     const {loading,ticket,ticket_err,ticket_not_found} = this.state
@@ -112,12 +122,12 @@ class Ticket extends React.Component {
           <Text style={Styles.text_ko}>nenalezeno</Text>
           <Button
               style={Styles.button}
-              onPress={this._handleReload}
+              onPress={this._toScan}
               title="skenovat jinou"
           />
           <Button
               style={Styles.button}
-              onPress={this._handleReload}
+              onPress={this._toManual}
               title="zadat ručně jinou"
           />
           <Button
@@ -145,5 +155,6 @@ function mapStateToProps(state) {
 
 export default compose(
   withApollo,
+  withNavigation,
   connect(mapStateToProps,{}),
 )(Ticket);
