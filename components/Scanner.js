@@ -18,7 +18,7 @@ class Scanner extends React.Component {
 
   _tick = ()=>{
     console.log("Scanner TICK");
-    this.setState({ticker:1});
+    //this.setState({ticker:1});
   }
 
   componentDidMount() {
@@ -28,17 +28,20 @@ class Scanner extends React.Component {
       //console.log("hasCameraPermission",res)
       this.setState({hasCameraPermission: status === 'granted'});
     })
-    this.tickTimer = setInterval(this._tick,2000);
+   // this.tickTimer = setInterval(this._tick,2000);
   }
   componentWillUnmount() {
     console.log("Scanner componentWillUnmount");
-    if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
+    //if (this.tickTimer) { clearInterval(this.tickTimer); this.tickTimer = null;}
   }
 
   _handleBarCodeRead = ({ type, data }) => {
     console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
     if (this.props.route == "Main/ScanStack/Scan/") {
       this.props.onTicket(data);
+    } else {
+      console.log('Scan on inactive page');
+      alert("Scan on inactive page");
     }
   };
 
@@ -50,21 +53,34 @@ class Scanner extends React.Component {
         return <Text>No access to camera</Text>;
       }
 
+
+      return (
+        <BarCodeScanner 
+          barCodeScannerSettings={{
+            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+          }}
+          onBarCodeScanned={this._handleBarCodeRead}
+          style={{ flex: 1 }}
+        />
+      )
+      /*
+
       return (
         <View style={{flex:1}}>
         <Camera ref={ref => { this.camera = ref; }}
           barCodeScannerSettings={{
             barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
           }}
-          onBarCodeScanned={this._handleBarCodeRead}
-          style={{ flex: 1 }}
-          //style={StyleSheet.absoluteFill}
-          focusDepth={1}
+          onBarCodeScanned={()=>{console.log("ON SCAN")}}
+          //style={{ flex: 1 }}
+          style={StyleSheet.absoluteFill}
+          focusDepth={.5}
           //type={this.state.type}
           //useCamera2Api
         />
         </View>
       )
+      */
   }
 }
 
