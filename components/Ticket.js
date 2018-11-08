@@ -96,6 +96,7 @@ class Ticket extends React.Component {
       variables: {ticket_key,event_id}
     }).then(res=>{
       console.log("gqlLogEntry",res);
+      alert("zaevidovano");
     }).catch(err=>{
       alert(err);
     });
@@ -220,6 +221,7 @@ class Ticket extends React.Component {
       )
     }
     let ticket_info = this.renderTicketInfo(ticket);
+    
     if (ticket.used) {
       return(
         <React.Fragment>
@@ -229,6 +231,7 @@ class Ticket extends React.Component {
         </React.Fragment>
       )
     }
+    
     return (
       <React.Fragment>
       <Text style={Styles.text_ok}>Platná vstupenka</Text>
