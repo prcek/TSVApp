@@ -48,9 +48,9 @@ class ScanScreen extends React.Component {
         />
         <NavContext.Consumer>
           {value =>{
-            if (value != 'Main/ScanStack/Scan/') {
-              return (<Text> inactive </Text>)
-            }
+            //if (value != 'Main/ScanStack/Scan/') {
+            //  return (<Text> inactive </Text>)
+            //}
             return (
               <Scanner route={value} onTicket={this._handleTicket} />
             )

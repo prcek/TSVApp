@@ -55,6 +55,7 @@ class TicketScreen extends React.Component {
       return (
         <View style={Styles.screen_view}>
           <NoAuthWarn />
+          <CurrentEvent />
           {vt?(
             <React.Fragment>
               <Text style={Styles.text}>{ticket_key}</Text>

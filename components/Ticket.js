@@ -20,6 +20,26 @@ query EventTicketGet($ticket_key: String!) {
 }
 `;
 
+/*
+  {key:"RESERVATION",label:"rezervace"},
+    {key:"SOLD",label:"prodaná"},
+    {key:"SELLING",label:"čeká na platbu"},
+    {key:"BOOKED",label:"v košíku"},
+    {key:"CANCELLED",label:"stornovaný"},
+    {key:"ERROR",label:"chyba"},
+    */
+
+function ticketStatusAsText(s) {
+  switch (s) {
+    case 'RESERVATION': return "jen rezervace";
+    case 'SOLD': return "zaplacená";
+    case 'SELLING': return "nezaplacená";
+    case 'BOOKED': return "jen v košíku";
+    case 'CANCELLED': return "stornovaná";
+    default:
+  }
+  return s;
+}
 
 class Ticket extends React.Component {
   
@@ -85,6 +105,9 @@ class Ticket extends React.Component {
     this.fetchTicket();
   }
 
+  _handleEntry = ()=>{
+   // this.fetchTicket();
+  }
 
   _toScan = ()=>{
     this.props.navigation.navigate('Scan');
@@ -94,10 +117,36 @@ class Ticket extends React.Component {
     this.props.navigation.navigate('Input');
   };
 
+  renderScanButtons() {
+    return (
+      <React.Fragment>
+          <Button
+              style={Styles.button}
+              onPress={this._toScan}
+              title="skenovat jinou"
+          />
+          <Button
+              style={Styles.button}
+              onPress={this._toManual}
+              title="zadat ručně jinou"
+          />
+      </React.Fragment>
+    )
+  }
+
+  renderTicketInfo(ticket) {
+    return (
+      <React.Fragment>
+        <Text>Typ: {ticket.name}</Text>
+        <Text>Cena: {ticket.cost}</Text>
+      </React.Fragment>
+    )
+  }
+
   render() {
     const {event_id,auth_ok,ticket_key,backTo}  = this.props;
     const {loading,ticket,ticket_err,ticket_not_found} = this.state
-
+    const scanBtns = this.renderScanButtons();
     if (loading) {
       return (
         <Text> hledám vstupenku.... </Text>
@@ -116,20 +165,11 @@ class Ticket extends React.Component {
       )
     }
 
-    if (ticket_not_found) {
+    if (ticket_not_found || ticket==null) {
       return (
         <React.Fragment>
           <Text style={Styles.text_ko}>nenalezeno</Text>
-          <Button
-              style={Styles.button}
-              onPress={this._toScan}
-              title="skenovat jinou"
-          />
-          <Button
-              style={Styles.button}
-              onPress={this._toManual}
-              title="zadat ručně jinou"
-          />
+          {scanBtns}
           <Button
               style={Styles.button}
               onPress={this._handleReload}
@@ -138,9 +178,46 @@ class Ticket extends React.Component {
         </React.Fragment>
       )
     }
+    if (ticket.event_id != event_id) { 
+      return (
+        <React.Fragment>
+          <Text style={Styles.text_ko}>Vstupenka z jiné akce</Text>
+          {scanBtns}
+        </React.Fragment>
+      )
+    }
+    if (ticket.status != "SOLD") {
+      return (
+        <React.Fragment>
+          <Text style={Styles.text_ko}>Neplatná vstupenka - {ticketStatusAsText(ticket.status)}</Text>
+          {scanBtns}
+        </React.Fragment>
+      )
+    }
+    let ticket_info = this.renderTicketInfo(ticket);
+    if (ticket.used) {
+      return(
+        <React.Fragment>
+        <Text style={Styles.text_ko}>Použitá vstupenka</Text>
+          {ticket_info}
+          {scanBtns}
+        </React.Fragment>
+      )
+    }
+    return (
+      <React.Fragment>
+      <Text style={Styles.text_ok}>Platná vstupenka</Text>
+        {ticket_info}
 
-
-    return <Text style={Styles.text_ok}>{JSON.stringify({props:{backTo,event_id,auth_ok,ticket_key},state:{loading,ticket,ticket_err,ticket_not_found}})}</Text>
+        <Button
+          style={Styles.button}
+          onPress={this._handleEntry}
+          title="zaevidovat vstup"
+        />
+        {scanBtns}
+      </React.Fragment>
+    )
+    //return <Text style={Styles.text_ok}>{JSON.stringify({props:{backTo,event_id,auth_ok,ticket_key},state:{loading,ticket,ticket_err,ticket_not_found}})}</Text>
   }
 }
 

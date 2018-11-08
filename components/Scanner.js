@@ -41,7 +41,7 @@ class Scanner extends React.Component {
       this.props.onTicket(data);
     } else {
       console.log('Scan on inactive page');
-      alert("Scan on inactive page");
+      //alert("Scan on inactive page");
     }
   };
 
