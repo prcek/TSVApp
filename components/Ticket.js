@@ -9,6 +9,7 @@ import { withNavigation } from 'react-navigation';
 const GQL_GET_TICKET=gql`
 query EventTicketGet($ticket_key: String!) {
   eventTicketGet(ticket_key:$ticket_key) {
+    ticket_key
     event_id
     name
     cost
@@ -19,6 +20,19 @@ query EventTicketGet($ticket_key: String!) {
   }
 }
 `;
+
+const GQL_LOG_ENTRY=gql`
+mutation EventTicketLogEntry($event_id:ID!,$ticket_key:String!){
+  eventTicketLogEntry(event_id:$event_id, ticket_key:$ticket_key) {
+    ticket_key
+    event_id
+    used
+    used_by
+    used_datetime
+  }
+}
+`;
+
 
 /*
   {key:"RESERVATION",label:"rezervace"},
@@ -76,6 +90,17 @@ class Ticket extends React.Component {
 
   }
 
+  gqlLogEntry(event_id,ticket_key) {
+    this.props.client.mutate({
+      mutation: GQL_LOG_ENTRY,
+      variables: {ticket_key,event_id}
+    }).then(res=>{
+      console.log("gqlLogEntry",res);
+    }).catch(err=>{
+      alert(err);
+    });
+  }
+
 
   fetchTicket() {
     const { auth_ok, ticket_key } = this.props;
@@ -106,7 +131,7 @@ class Ticket extends React.Component {
   }
 
   _handleEntry = ()=>{
-   // this.fetchTicket();
+    this.gqlLogEntry(this.props.event_id,this.props.ticket_key);
   }
 
   _toScan = ()=>{
