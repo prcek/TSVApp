@@ -60,6 +60,7 @@ class Scanner extends React.Component {
             barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
           }}
           onBarCodeScanned={this._handleBarCodeRead}
+          //style={StyleSheet.absoluteFill}
           style={{ flex: 1 }}
         />
       )
