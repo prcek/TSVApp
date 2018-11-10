@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
         margin:4,
     },
 
+    button_view: {
+      margin:5
+    },
+
     buttonT: {
       height:50,
       margin:4,
@@ -38,6 +42,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', 
         alignItems: 'stretch'
     },
+
+    screen_view: { 
+      padding: 16, 
+      flex: 1, 
+      flexDirection: 'column',
+      justifyContent: 'flex-start', 
+      alignItems: 'stretch'
+   },
 
     scanner_view: { 
       padding: 16, 

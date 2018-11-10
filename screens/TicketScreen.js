@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Text, View , Button} from 'react-native';
+import { Text, View } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, withApollo} from "react-apollo";
 import Styles from '../constants/Styles';
@@ -10,6 +10,7 @@ import gql from 'graphql-tag';
 import Moment from 'moment';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
+import Button from '../components/Button';
 
 
 const GQL_GET_TICKET=gql`
@@ -64,13 +65,12 @@ class TicketScreen extends React.Component {
           ):(
             <React.Fragment>
                 <Text style={Styles.text_ko}>Naskenuj vstupenku nebo zadej kód ručně</Text>
+               
                 <Button
-                    style={Styles.button}
                     onPress={this._toScan}
                     title={"skenovat"}
                 />
                 <Button
-                    style={Styles.button}
                     onPress={this._toManual}
                     title={"zadat kód"}
                 />
