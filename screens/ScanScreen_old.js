@@ -83,9 +83,9 @@ class ScanScreen extends React.Component {
 
   _tick = ()=> {
 
-     if ((this.props.navigation.state) && (this.props.navigation.state.routeName=="Scan")) {
-      console.log("scan is active");
-     }
+    // if ((this.props.navigation.state) && (this.props.navigation.state.routeName=="Scan")) {
+    //  console.log("scan is active");
+    // }
   }
 
   _clear = ()=> {

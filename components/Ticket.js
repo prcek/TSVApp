@@ -10,14 +10,23 @@ import Moment from 'moment';
 const GQL_GET_TICKET=gql`
 query EventTicketGet($ticket_key: String!) {
   eventTicketGet(ticket_key:$ticket_key) {
-    ticket_key
-    event_id
-    name
-    cost
-    status
-    used
-    used_by
-    used_datetime
+    ticket { 
+      ticket_key
+      event_id
+      name
+      cost
+      status
+      used
+      used_by
+      used_datetime
+    }
+    event {
+      id
+      name
+      date
+    }
+    ticket_zone_text
+    ticket_place_text
   }
 }
 `;
@@ -62,7 +71,7 @@ class Ticket extends React.Component {
     super(props);
     this.state = {
       loading:false,
-      ticket:null,
+      full_ticket:null,
       ticket_err:false,
       ticket_not_found:false,
     }
@@ -74,19 +83,19 @@ class Ticket extends React.Component {
       variables:{ ticket_key},
       fetchPolicy:"network-only"
     }).then(res => {
-      let ticket  = null;
+      let full_ticket  = null;
       let ticket_not_found = true;
-      if (res.data && res.data.eventTicketGet) {
+      if (res.data && res.data.eventTicketGet && res.data.eventTicketGet.ticket) {
         console.log("GOT TICKET",res.data.eventTicketGet);
-        ticket = res.data.eventTicketGet;
+        full_ticket = res.data.eventTicketGet;
         ticket_not_found = false;
       } else {
         console.log("TICKET NOT FOUND",ticket_key);
       }
-      this.setState({loading:false,ticket,ticket_not_found,ticket_err:false})
+      this.setState({loading:false,full_ticket,ticket_not_found,ticket_err:false})
     }).catch(err=>{
       console.error("ticket get error",err);
-      this.setState({loading:false,ticket:null,ticket_not_found:false,ticket_err:true})
+      this.setState({loading:false,full_ticket:null,ticket_not_found:false,ticket_err:true})
     })
 
   }
@@ -161,18 +170,20 @@ class Ticket extends React.Component {
     )
   }
 
-  renderTicketInfo(ticket) {
+  renderTicketInfo(full_ticket) {
     return (
       <React.Fragment>
-        <Text>Typ: {ticket.name}</Text>
-        <Text>Cena: {ticket.cost}</Text>
+        <Text>Typ: {full_ticket.ticket.name}</Text>
+        <Text>Cena: {full_ticket.ticket.cost}</Text>
+        <Text>Zóna: {full_ticket.ticket_zone_text}</Text>
+        <Text>Místo: {full_ticket.ticket_place_text}</Text>
       </React.Fragment>
     )
   }
 
   render() {
     const {event_id,auth_ok,ticket_key,backTo}  = this.props;
-    const {loading,ticket,ticket_err,ticket_not_found} = this.state
+    const {loading,full_ticket,ticket_err,ticket_not_found} = this.state
     const scanBtns = this.renderScanButtons();
     if (loading) {
       return (
@@ -192,7 +203,7 @@ class Ticket extends React.Component {
       )
     }
 
-    if (ticket_not_found || ticket==null) {
+    if (ticket_not_found || full_ticket==null || full_ticket.ticket==null)  {
       return (
         <React.Fragment>
           <Text style={Styles.text_ko}>nenalezeno</Text>
@@ -205,31 +216,32 @@ class Ticket extends React.Component {
         </React.Fragment>
       )
     }
-    if (ticket.event_id != event_id) { 
+    if (full_ticket.ticket.event_id != event_id) { 
       return (
         <React.Fragment>
           <Text style={Styles.text_ko}>Vstupenka z jiné akce</Text>
+          <Text>Vstupenka je z akce {full_ticket.event?full_ticket.event.name:"?"}</Text>
           {scanBtns}
         </React.Fragment>
       )
     }
-    if (ticket.status != "SOLD") {
+    if (full_ticket.ticket.status != "SOLD") {
       return (
         <React.Fragment>
-          <Text style={Styles.text_ko}>Neplatná vstupenka - {ticketStatusAsText(ticket.status)}</Text>
+          <Text style={Styles.text_ko}>Neplatná vstupenka - {ticketStatusAsText(full_ticket.ticket.status)}</Text>
           {scanBtns}
         </React.Fragment>
       )
     }
-    let ticket_info = this.renderTicketInfo(ticket);
+    let ticket_info = this.renderTicketInfo(full_ticket);
     
-    if (ticket.used) {
-      const mm = Moment(ticket.used_datetime).toDate();
+    if (full_ticket.ticket.used) {
+      const mm = Moment(full_ticket.ticket.used_datetime).toDate();
       return(
         <React.Fragment>
         <Text style={Styles.text_ko}>Použitá vstupenka</Text>
           {ticket_info}
-          <Text>zaevidoval: {ticket.used_by}</Text>
+          <Text>zaevidoval: {full_ticket.ticket.used_by}</Text>
           <Text>čas:  {mm.toLocaleDateString()+" "+mm.toLocaleTimeString()}</Text>
           {scanBtns}
         </React.Fragment>
