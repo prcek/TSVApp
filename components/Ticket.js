@@ -76,6 +76,8 @@ class Ticket extends React.Component {
       full_ticket:null,
       ticket_err:false,
       ticket_not_found:false,
+      entry_done:false,
+      entry_wait:false,
     }
   }
 
@@ -105,12 +107,13 @@ class Ticket extends React.Component {
   gqlLogEntry(event_id,ticket_key) {
     this.props.client.mutate({
       mutation: GQL_LOG_ENTRY,
-      variables: {ticket_key,event_id}
+      variables: {ticket_key:ticket_key,event_id}
     }).then(res=>{
       console.log("gqlLogEntry",res);
-      alert("zaevidovano");
+      this.setState({entry_done:true,entry_wait:false});
     }).catch(err=>{
       alert(err);
+      this.setState({entry_wait:false});
     });
   }
 
@@ -120,7 +123,7 @@ class Ticket extends React.Component {
     console.log("Ticket, fetchTicket")
     if (auth_ok && ticket_key && ticket_key.length>0 && ticket_key!="NO-TICKET") {
       console.log("Ticket, loading ticket",ticket_key);
-      this.setState({loading:true, ticket:null,ticket_not_found:false,ticket_err:false},()=>{
+      this.setState({loading:true, ticket:null,ticket_not_found:false,ticket_err:false,entry_done:false},()=>{
         this.gqlFetch(ticket_key);
       })
     }
@@ -144,7 +147,9 @@ class Ticket extends React.Component {
   }
 
   _handleEntry = ()=>{
-    this.gqlLogEntry(this.props.event_id,this.props.ticket_key);
+    this.setState({entry_wait:true,entry_done:false},()=>{
+      this.gqlLogEntry(this.props.event_id,this.props.ticket_key);
+    })
   }
 
   _toScan = ()=>{
@@ -156,17 +161,20 @@ class Ticket extends React.Component {
   };
 
   renderScanButtons() {
+    const {entry_wait} = this.state;
     return (
       <React.Fragment>
           <Button
               style={Styles.button}
               onPress={this._toScan}
               title="skenovat jinou"
+              disabled={entry_wait}
           />
           <Button
               style={Styles.button}
               onPress={this._toManual}
               title="zadat ručně jinou"
+              disabled={entry_wait}
           />
       </React.Fragment>
     )
@@ -185,7 +193,7 @@ class Ticket extends React.Component {
 
   render() {
     const {event_id,auth_ok,ticket_key,backTo}  = this.props;
-    const {loading,full_ticket,ticket_err,ticket_not_found} = this.state
+    const {loading,full_ticket,ticket_err,ticket_not_found,entry_done,entry_wait} = this.state
     const scanBtns = this.renderScanButtons();
     if (loading) {
       return (
@@ -237,6 +245,7 @@ class Ticket extends React.Component {
     }
     let ticket_info = this.renderTicketInfo(full_ticket);
     
+    /*
     if (full_ticket.ticket.used) {
       const mm = Moment(full_ticket.ticket.used_datetime).toDate();
       return(
@@ -249,17 +258,24 @@ class Ticket extends React.Component {
         </React.Fragment>
       )
     }
+    */
     
     return (
       <React.Fragment>
       <Text style={Styles.text_ok}>Platná vstupenka</Text>
         {ticket_info}
 
-        <Button
+
+        {entry_done?(
+          <Text style={Styles.text_ok}> zaevidovano </Text>
+        ):(
+          <Button
           style={Styles.button}
           onPress={this._handleEntry}
           title="zaevidovat vstup"
-        />
+          disabled={entry_wait}
+          />
+        )}
         {scanBtns}
       </React.Fragment>
     )

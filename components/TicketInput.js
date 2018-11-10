@@ -51,6 +51,7 @@ class TicketInput extends React.Component {
         //console.log("ticket lookup res",res);
         let candidates = [];
         if (res.data && res.data.eventTicketLookup) {
+           console.log("CANDIDATES",res.data.eventTicketLookup);
            candidates = res.data.eventTicketLookup.candidates;
         }
         this.setState({lookup:false,candidates})
@@ -79,16 +80,20 @@ class TicketInput extends React.Component {
   };
   _onPressCandidate = ()=>{
     if (this.state.candidates.length==1) {
-      this.setState({value:this.state.candidates[0],valid_value:true})
-      this.props.onTicket(this.state.candidates[0]);
+     // this.setState({value:this.state.candidates[0],valid_value:true})
+      const val = this.state.candidates[0];
+      this._onClear();
+      this.props.onTicket(val);
     }
   }
   _onHandleTicket = ()=>{
-    this.props.onTicket(this.state.value);
+    const val = this.state.value;
+    this._onClear();
+    this.props.onTicket(val);
   }
 
   _onClear = ()=>{
-    this.setState({value:"T",candidates:[]})
+    this.setState({value:"T",valid_value:false,candidates:[]})
   }
 
   render() {
