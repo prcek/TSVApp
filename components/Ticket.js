@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text, Button } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
 import { compose, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
 import { withNavigation } from 'react-navigation';
 import Moment from 'moment';
+
+import Button from './Button';
 
 const GQL_GET_TICKET=gql`
 query EventTicketGet($ticket_key: String!) {
