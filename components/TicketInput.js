@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text,View,TextInput,TouchableOpacity,Button } from 'react-native';
+import { Text,View,TextInput,TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import gql from 'graphql-tag';
 import Styles from '../constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
+import Button from './Button';
 
 const GQL_TICKET_LOOKUP=gql`
 query eventTicketLookup($event_id:ID!, $lookup_key:String!) {

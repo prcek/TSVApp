@@ -245,7 +245,7 @@ class Ticket extends React.Component {
     }
     let ticket_info = this.renderTicketInfo(full_ticket);
     
-    /*
+    
     if (full_ticket.ticket.used) {
       const mm = Moment(full_ticket.ticket.used_datetime).toDate();
       return(
@@ -258,7 +258,7 @@ class Ticket extends React.Component {
         </React.Fragment>
       )
     }
-    */
+    
     
     return (
       <React.Fragment>

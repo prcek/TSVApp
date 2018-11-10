@@ -11,13 +11,32 @@ const psconfig = {
     blacklist: ['server'], 
     version:redux_state_version,
     migrate: (state) => {
-        console.log("STORE MIGRATION STEP",state);
+        //console.log("STORE MIGRATION STEP",state);
         //TODO clean old auth
+        console.log("XXXXX STORE XXXXX")
         if (state===undefined) return Promise.resolve({});
         if ((state._persist) && (state._persist.version<redux_state_version)) {
             console.log("redux state reset");
             return Promise.resolve({})
         } else {
+            if (state.auth  && state.auth.ok) {
+                console.log("STORE RECOVERY AUTH",state.auth);
+                if (state.auth.user && state.auth.user.exp) {
+                    var now = new Date();
+                    var exp = (state.auth.user.exp*1000)-now.getTime();
+                    console.log("STORE AUTH time left",exp);
+                    if (exp<20000) {
+                        state.auth.ok=false;
+                        console.log("CLEAR AUTH");
+                    }
+                } else {
+                    console.log("CLEAR AUTH");
+                    state.auth.ok=false;
+                }
+            } else {
+
+                console.log("NO AUTH");
+            }
             return Promise.resolve(state)
         }
     }

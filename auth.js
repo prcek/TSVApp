@@ -8,9 +8,10 @@ function processAuthResp(data) {
     const dt = jwtDecode(data.auth_token);
     console.log("DT:",dt)
     store.dispatch(
-        setAuth(data.auth_token,{role:dt.role,login:data.login, id:dt.user_id,name:data.name,cgroup_key:data.cgroup_key})
+        setAuth(data.auth_token,{iat:dt.iat,exp:dt.exp,role:dt.role,login:data.login, id:dt.user_id,name:data.name,cgroup_key:data.cgroup_key})
     );
 }
+
 
 
 function doLogin(user,password) {
