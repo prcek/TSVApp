@@ -2,6 +2,21 @@ import { Platform,StyleSheet} from 'react-native';
 
 
 const styles = StyleSheet.create({
+
+    event_header: {
+      padding:3,
+      height:30,
+      justifyContent: 'center', 
+      alignItems: 'center',
+      borderBottomColor: "gray",
+      borderBottomWidth: 1, 
+    },
+    event_header_text: {
+      fontWeight: 'bold',
+      color:"black",
+      fontSize: 15,
+    },
+
     text_ok: {
       fontWeight: 'bold',
       color:"green",
@@ -36,28 +51,14 @@ const styles = StyleSheet.create({
     },
 
     screen_view: { 
-        padding: 16, 
+        padding: 0, 
         flex: 1, 
         flexDirection: 'column',
         justifyContent: 'flex-start', 
         alignItems: 'stretch'
     },
 
-    screen_view: { 
-      padding: 16, 
-      flex: 1, 
-      flexDirection: 'column',
-      justifyContent: 'flex-start', 
-      alignItems: 'stretch'
-   },
 
-    scanner_view: { 
-      padding: 16, 
-      flex: 1, 
-      flexDirection: 'column',
-      justifyContent: 'flex-start', 
-      alignItems: 'stretch'
-  },
 
 
     input: Platform.OS === 'ios' ? {

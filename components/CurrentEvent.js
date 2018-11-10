@@ -1,16 +1,27 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text,View } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
+
+
+
 
 class CurrentEvent extends React.Component {
   
   render() {
     const {event_id,event_title}  = this.props;
     if (event_id) {
-      return <Text style={Styles.text_ok}>{event_title}</Text>;
+      return (
+        <View style={Styles.event_header}>
+           <Text style={Styles.event_header_text}>Akce: {event_title}</Text>
+        </View>
+      );
     } else {
-      return <Text style={Styles.text_ko}>Není zvolena akce</Text>;
+      return (
+        <View style={Styles.event_header}>
+          <Text style={Styles.text_ko}>Není zvolena akce</Text>
+        </View>
+      );
     }
    
   }

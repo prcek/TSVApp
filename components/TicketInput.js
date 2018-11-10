@@ -10,6 +10,7 @@ const GQL_TICKET_LOOKUP=gql`
 query eventTicketLookup($event_id:ID!, $lookup_key:String!) {
   eventTicketLookup(event_id:$event_id lookup_key:$lookup_key) {
     limited
+    lookup_key
     match {
       ticket_key
     }
@@ -34,6 +35,7 @@ class TicketInput extends React.Component {
   lookup_candidates(v) {
 
     if (this.state.lookup) {
+      console.log("LOOKUP SKIP!");
       return;
     }
     if (!this.props.event_id) {
@@ -52,7 +54,12 @@ class TicketInput extends React.Component {
         let candidates = [];
         if (res.data && res.data.eventTicketLookup) {
            console.log("CANDIDATES",res.data.eventTicketLookup);
-           candidates = res.data.eventTicketLookup.candidates;
+           if (res.data.eventTicketLookup.lookup_key.length>v.length) {
+            //candidates = [];
+           } else {
+            candidates = res.data.eventTicketLookup.candidates;
+           }
+          
         }
         this.setState({lookup:false,candidates})
       }).catch(err=>{
