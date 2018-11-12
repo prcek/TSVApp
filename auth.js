@@ -82,6 +82,8 @@ function doRelogin() {
     
         var now = new Date();
         var exp = (d.exp*1000)-now.getTime();
+        //var exp_date = new Date(d.exp*1000);
+        //console.log("RELOGIN CHECK auth expire",exp_date, "now",now)
         if (exp>5000) {
             //console.log("login auth exp: ", exp/60000, "min left")
             if (exp<(60000*45)) {  //1 hour before exp

@@ -22,12 +22,12 @@ const psconfig = {
             if (state.auth  && state.auth.ok) {
                 console.log("STORE RECOVERY AUTH",state.auth);
                 if (state.auth.user && state.auth.user.exp) {
-                    var now = new Date();
-                    var exp = (state.auth.user.exp*1000)-now.getTime();
-                    console.log("STORE AUTH time left",exp);
-                    if (exp<20000) {
+                    var now = new Date().getTime();
+                    var left = state.auth.user.exp*1000-now;
+                    console.log("STORE AUTH time now",now," exp", state.auth.user.exp," min left",left/60000);
+                    if (left<60000) {
                         state.auth.ok=false;
-                        console.log("CLEAR AUTH");
+                        console.log("CLEAR AUTH"); 
                     }
                 } else {
                     console.log("CLEAR AUTH");

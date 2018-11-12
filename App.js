@@ -8,8 +8,12 @@ import { store, persistor } from './store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 
+import Sentry from 'sentry-expo';
 
+// Remove this once Sentry is correctly setup.
+//Sentry.enableInExpoDevelopment = true;
 
+Sentry.config('https://5bd6fa86c22743a591f941b5d7c9b660@sentry.io/1320983').install();
 
 export default class App extends React.Component {
   state = {

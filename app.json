@@ -39,6 +39,18 @@
       "test_auth_url_base": "http://10.0.144.167:3000/spa_auth",
       "test_status_url_base": "http://10.0.144.167:3000/spa_status",
       "test_gql_url": "http://10.0.144.167:3000/graphql"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "tomas-hluchan",
+            "project": "tsvapp",
+            "authToken": "9a96872129cd470ebc3408166b8b2037d6aba4c0ebca4ed4b722cfef87c7a3ed"
+          }
+        }
+      ]
     }
   }
 }
