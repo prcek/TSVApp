@@ -267,7 +267,7 @@ class Ticket extends React.Component {
 
 
         {entry_done?(
-          <Text style={Styles.text_ok}> zaevidovano </Text>
+          <Text style={Styles.text_ok}> zaevidováno </Text>
         ):(
           <Button
           style={Styles.button}

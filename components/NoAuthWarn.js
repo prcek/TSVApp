@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text,Button } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
+import Button from '../components/Button';
 
 
 import { compose } from "react-apollo";
@@ -19,9 +20,8 @@ class NoAuthWarn extends React.Component {
     }
     return (
       <React.Fragment>
-        <Text style={Styles.text_ko}>Nejste přihlášen(a)!</Text>
+        <Text style={Styles.text_ko}>Nejste přihlášen(a)!!</Text>
         <Button
-          style={Styles.button}
           onPress={this._toAuth}
           title={"přihlásit"}
         />
