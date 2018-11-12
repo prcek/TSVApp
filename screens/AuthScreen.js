@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Constants } from 'expo';
-import { Platform,ActivityIndicator, Text, View , TextInput, Button} from 'react-native';
+import { Platform,ActivityIndicator, Text, View , TextInput} from 'react-native';
 import { connect } from 'react-redux'
 import { doLogin,doLogout} from './../auth';
-
+import Button from '../components/Button';
 import Styles from '../constants/Styles';
 
 
@@ -75,7 +75,6 @@ class AuthScreen extends React.Component {
             <React.Fragment>
                 <Text style={Styles.text_ok}>Uživatel {auth_user.name} je přihlášen(a)</Text>
                 <Button
-                  style={Styles.button}
                   disabled={ wait }
                   onPress={this._handleLogout}
                   title="Odhlásit"
@@ -89,7 +88,6 @@ class AuthScreen extends React.Component {
               <TextInput ref={this.pass_field} placeholder={"heslo"} maxLength={100} autoCapitalize={"none"} autoCorrect={false} secureTextEntry style={Styles.input} value={password} onSubmitEditing={this._handleLogin} onChangeText={this._handleChangePassword}/>
               
               <Button
-                  style={Styles.button}
                   disabled={ wait || !login || !password}
                   onPress={this._handleLogin}
                   title="přihlásit"

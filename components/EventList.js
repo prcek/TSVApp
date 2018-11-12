@@ -1,8 +1,9 @@
 import React from 'react';
-import { Alert,Text, Button, FlatList, TouchableOpacity, View } from 'react-native';
+import { Alert,Text, FlatList, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux'
 import { compose, graphql, withApollo} from "react-apollo";
 import { setEvent, clearEvent } from '../actions'
+import Button from '../components/Button';
 
 import gql from 'graphql-tag';
 import Moment from 'moment';

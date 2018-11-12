@@ -2,7 +2,7 @@
 
 
 import React from 'react';
-import { StyleSheet, Text, View , Button, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, Text, View , TouchableOpacity, Image} from 'react-native';
 import { withNavigationFocus, withNavigation, NavigationEvents } from 'react-navigation';
 import { compose, } from "react-apollo";
 import NavContext from '../navigation/NavContext';
@@ -12,6 +12,7 @@ import Styles from '../constants/Styles';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
 
+import Button from '../components/Button';
 
 
 
@@ -42,7 +43,6 @@ class ScanScreen extends React.Component {
         <NoAuthWarn />
         <CurrentEvent />
         <Button
-                    style={Styles.button}
                     onPress={this._toManual}
                     title={"zadat ručně"}
         />

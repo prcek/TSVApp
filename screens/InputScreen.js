@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {  View, Button } from 'react-native';
+import {  View } from 'react-native';
 import TicketInput from '../components/TicketInput';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
@@ -9,6 +9,7 @@ import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import { compose } from "react-apollo";
 
+import Button from '../components/Button';
 
 class InputScreen extends React.Component {
     static navigationOptions = {
@@ -29,7 +30,6 @@ class InputScreen extends React.Component {
           <NoAuthWarn />
           <CurrentEvent />
           <Button
-            style={Styles.button}
             onPress={this._toScan}
             title={"skenovat"}
           />

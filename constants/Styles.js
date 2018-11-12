@@ -21,11 +21,13 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color:"green",
       fontSize: 25,
+      margin:4
     },
     text_ko: {
       fontWeight: 'bold',
       color:"red",
       fontSize: 25,
+      margin:4
     },
 
     text: {
