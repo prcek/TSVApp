@@ -18,6 +18,7 @@ function doLogin(user,password) {
     console.log("DO_LOGIN");
     return new Promise(function(resolve, reject) {
         const url = Constants.manifest.extra.auth_url_base+"/login";
+        //console.log("Constants:",Constants);
         console.log("login url:",url);
         fetch(url,{
             method:'POST',
@@ -28,7 +29,8 @@ function doLogin(user,password) {
             body: JSON.stringify({
               login: user,
               password: password,
-              device_id: Constants.deviceId
+              device_id: Constants.deviceId,
+              app_version: Constants.manifest.version,
             }),
         }).then((resp) => resp.json()).then(res=>{
             console.log("FETCH res",res);
@@ -91,7 +93,11 @@ function doRelogin() {
                 const url = Constants.manifest.extra.auth_url_base+"/relogin";
                 fetch(url,{
                     method:'POST',
-                    body:JSON.stringify({token:token}), 
+                    body:JSON.stringify({
+                        token:token,
+                        device_id: Constants.deviceId,
+                        app_version: Constants.manifest.version,
+                    }), 
                     headers: new Headers({
                         'Content-Type': 'application/json'
                     })
