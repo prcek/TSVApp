@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text,View,TextInput,TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
-import { compose, graphql, withApollo} from "react-apollo";
+import { graphql, withApollo} from "react-apollo";
+import { compose } from 'redux';
+
 import gql from 'graphql-tag';
 import Styles from '../constants/Styles';
 import { Ionicons } from '@expo/vector-icons';

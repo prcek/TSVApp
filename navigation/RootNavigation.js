@@ -1,8 +1,8 @@
 import React from 'react';
 import { Notifications } from 'expo';
-import { createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 
-import { Constants } from 'expo';
+import  Constants  from 'expo-constants';
 import { AsyncStorage, Text, View , Button} from 'react-native';
 import { connect } from 'react-redux'
 import { ApolloClient } from 'apollo-client';
@@ -19,9 +19,13 @@ import NavContext from './NavContext';
 import MainTabNavigator from './MainTabNavigator';
 //import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
-const AppNavigator = createSwitchNavigator({
-  Main: MainTabNavigator,
-});
+
+const AppNavigator = createAppContainer(
+  createSwitchNavigator({
+    Main: MainTabNavigator,
+  })
+);
+
 
 function dump_nav(r) {
 
@@ -89,9 +93,9 @@ class RootNavigation extends React.Component {
     return (
       <ApolloProvider client={this.client}>
         <NavContext.Provider value={this.state.nav_path} >
-        <AppNavigator onNavigationStateChange={(prevState, currentState)=>{
+          <AppNavigator onNavigationStateChange={(prevState, currentState, action)=>{
           this.setState({nav_path:dump_nav(currentState)});
-          //console.log("AppNavigator.onNavigationStateChange",dump_nav(currentState));
+        //console.log("AppNavigator.onNavigationStateChange",dump_nav(currentState));
         }}/>
         </NavContext.Provider>
       </ApolloProvider>

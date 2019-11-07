@@ -2,7 +2,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux'
-import { compose, withApollo} from "react-apollo";
+import { withApollo} from "react-apollo";
+import { compose } from 'redux';
 import Styles from '../constants/Styles';
 import { withNavigation } from 'react-navigation';
 import Ticket from '../components/Ticket';

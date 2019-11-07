@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Constants } from 'expo';
+import  Constants  from 'expo-constants';
 import { Platform,ActivityIndicator, Text, View , TextInput} from 'react-native';
 import { connect } from 'react-redux'
 import { doLogin,doLogout} from './../auth';

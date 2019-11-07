@@ -19,7 +19,7 @@ class CurrentEvent extends React.Component {
     } else {
       return (
         <View style={Styles.event_header}>
-          <Text style={Styles.text_ko}>Není zvolena akce</Text>
+          <Text style={Styles.text_ko}>Není zvolena akce!</Text>
         </View>
       );
     }

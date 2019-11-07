@@ -7,7 +7,7 @@ import CurrentEvent from '../components/CurrentEvent';
 import Styles from '../constants/Styles';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
-import { compose } from "react-apollo";
+import { compose } from 'redux';
 
 import Button from '../components/Button';
 

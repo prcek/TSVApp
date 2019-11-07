@@ -1,6 +1,6 @@
 import { setAuth, clearAuth } from './actions'
 import {store} from './store';
-import { Constants } from 'expo';
+import  Constants  from 'expo-constants';
 
 const jwtDecode = require('jwt-decode');
 

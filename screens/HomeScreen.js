@@ -4,7 +4,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux'
-import { compose } from "react-apollo";
+import { compose } from 'redux';
 import EventList from '../components/EventList';
 import NoAuthWarn from '../components/NoAuthWarn';
 import CurrentEvent from '../components/CurrentEvent';
@@ -19,6 +19,7 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
   }
+
 
   render() {
     const {auth_ok} = this.props;

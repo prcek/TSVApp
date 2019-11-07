@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
-import { BarCodeScanner, Permissions ,Camera} from 'expo';
+import * as Permissions from 'expo-permissions';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
 class Scanner extends React.Component {
@@ -56,9 +57,7 @@ class Scanner extends React.Component {
 
       return (
         <BarCodeScanner 
-          barCodeScannerSettings={{
-            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-          }}
+          barCodeTypes = {[BarCodeScanner.Constants.BarCodeType.qr]}
           onBarCodeScanned={this._handleBarCodeRead}
           //style={StyleSheet.absoluteFill}
           style={{ flex: 1 }}

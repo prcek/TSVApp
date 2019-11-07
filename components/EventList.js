@@ -1,7 +1,8 @@
 import React from 'react';
 import { Alert,Text, FlatList, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux'
-import { compose, graphql, withApollo} from "react-apollo";
+import { graphql, withApollo} from "react-apollo";
+import { compose } from 'redux';
 import { setEvent, clearEvent } from '../actions'
 import Button from '../components/Button';
 

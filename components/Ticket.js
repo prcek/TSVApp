@@ -2,7 +2,9 @@ import React from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux'
 import Styles from '../constants/Styles';
-import { compose, withApollo} from "react-apollo";
+import { withApollo} from "react-apollo";
+import { compose } from 'redux';
+
 import gql from 'graphql-tag';
 import { withNavigation } from 'react-navigation';
 import Moment from 'moment';

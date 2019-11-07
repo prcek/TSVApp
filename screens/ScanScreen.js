@@ -4,7 +4,7 @@
 import React from 'react';
 import { StyleSheet, Text, View , TouchableOpacity, Image} from 'react-native';
 import { withNavigationFocus, withNavigation, NavigationEvents } from 'react-navigation';
-import { compose, } from "react-apollo";
+import { compose } from 'redux';
 import NavContext from '../navigation/NavContext';
 import { connect } from 'react-redux'
 import Scanner from '../components/Scanner';

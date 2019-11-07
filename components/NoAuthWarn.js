@@ -5,7 +5,8 @@ import Styles from '../constants/Styles';
 import Button from '../components/Button';
 
 
-import { compose } from "react-apollo";
+import { compose } from 'redux';
+
 import { withNavigation } from 'react-navigation';
 
 class NoAuthWarn extends React.Component {

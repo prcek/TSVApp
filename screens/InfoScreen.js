@@ -1,7 +1,7 @@
 import React from 'react';
 //import { ExpoConfigView } from '@expo/samples';
 import {  Text, View, ScrollView } from 'react-native';
-import { Constants } from 'expo';
+import  Constants  from 'expo-constants';
 import { store } from '../store';
 
 import JSONTree from 'react-native-json-tree'
