@@ -4,7 +4,6 @@
     "description": "This project is really great.",
     "slug": "TSVApp",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
       "android"
